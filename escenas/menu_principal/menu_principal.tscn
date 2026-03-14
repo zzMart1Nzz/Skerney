@@ -1,0 +1,115 @@
+[gd_scene format=3 uid="uid://cduk207fxbwpn"]
+
+[ext_resource type="Texture2D" uid="uid://cswwfs5c6gdob" path="res://images/menu_scene/menu_scene_spritesheet.png" id="1_53ly4"]
+[ext_resource type="Script" uid="uid://bb2mhg8b7b7lg" path="res://escenas/menu_principal/animacion_menu_principal.gd" id="2_00m27"]
+[ext_resource type="AudioStream" uid="uid://deh2ehsn1y5e5" path="res://music/menu_music.wav" id="2_jylg6"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_00m27"]
+atlas = ExtResource("1_53ly4")
+region = Rect2(0, 0, 1376, 768)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a8m85"]
+atlas = ExtResource("1_53ly4")
+region = Rect2(1376, 0, 1376, 768)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lbtcn"]
+atlas = ExtResource("1_53ly4")
+region = Rect2(2752, 0, 1376, 768)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hkuy5"]
+atlas = ExtResource("1_53ly4")
+region = Rect2(4128, 0, 1376, 768)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7mlcq"]
+atlas = ExtResource("1_53ly4")
+region = Rect2(5504, 0, 1376, 768)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_otvbs"]
+atlas = ExtResource("1_53ly4")
+region = Rect2(6880, 0, 1376, 768)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_w4esp"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_00m27")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a8m85")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lbtcn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hkuy5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7mlcq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_otvbs")
+}],
+"loop": true,
+"name": &"menu_scene",
+"speed": 6.0
+}]
+
+[node name="MenuPrincipal" type="Control" unique_id=389689906]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1434505369]
+zoom = Vector2(1.045, 1.045)
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=153947687]
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 644.0
+
+[node name="AnimacionMenuPrincipal" type="AnimatedSprite2D" parent="TextureRect" unique_id=1383635308]
+texture_filter = 1
+scale = Vector2(0.8357558, 0.8411458)
+sprite_frames = SubResource("SpriteFrames_w4esp")
+animation = &"menu_scene"
+frame = 3
+frame_progress = 0.6558564
+script = ExtResource("2_00m27")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1691248058]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -59.0
+offset_top = -184.0
+offset_right = 59.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 20
+
+[node name="NuevaPartida" type="Button" parent="VBoxContainer" unique_id=552033556]
+layout_mode = 2
+text = "Nueva Partida"
+
+[node name="Continuar" type="Button" parent="VBoxContainer" unique_id=1339630023]
+layout_mode = 2
+text = "Continuar"
+
+[node name="Opciones" type="Button" parent="VBoxContainer" unique_id=1778464106]
+layout_mode = 2
+text = "Opciones"
+
+[node name="Salir" type="Button" parent="VBoxContainer" unique_id=217126956]
+layout_mode = 2
+text = "Salir"
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." unique_id=929469148]
+stream = ExtResource("2_jylg6")
+autoplay = true
+bus = &"Music"

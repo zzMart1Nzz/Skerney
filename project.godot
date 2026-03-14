@@ -11,15 +11,18 @@ config_version=5
 [application]
 
 config/name="Skerney"
+run/main_scene="uid://cduk207fxbwpn"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
+
+[audio]
+
+buses/default_bus_layout="uid://c0iopb0sc1y25"
 
 [display]
 
 window/size/mode=3
-window/size/borderless=true
 window/stretch/mode="canvas_items"
-window/stretch/scale_mode="integer"
 
 [physics]
 
@@ -27,6 +30,7 @@ window/stretch/scale_mode="integer"
 
 [rendering]
 
+textures/canvas_textures/default_texture_filter=0
 rendering_device/driver.windows="d3d12"
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
