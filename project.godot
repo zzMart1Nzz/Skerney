@@ -20,6 +20,10 @@ config/windows_native_icon="res://assets/images/ico/skerney.ico"
 
 buses/default_bus_layout="uid://c0iopb0sc1y25"
 
+[autoload]
+
+ControladorPartida="*uid://cnq2xvkoe2dwf"
+
 [display]
 
 window/size/mode=3
