@@ -1,8 +1,13 @@
 [gd_scene format=3 uid="uid://cduk207fxbwpn"]
 
-[ext_resource type="Texture2D" uid="uid://cswwfs5c6gdob" path="res://images/menu_scene/menu_scene_spritesheet.png" id="1_53ly4"]
+[ext_resource type="Texture2D" uid="uid://cswwfs5c6gdob" path="res://assets/images/menu_scene/menu_scene_spritesheet.png" id="1_53ly4"]
 [ext_resource type="Script" uid="uid://bb2mhg8b7b7lg" path="res://escenas/menu_principal/animacion_menu_principal.gd" id="2_00m27"]
-[ext_resource type="AudioStream" uid="uid://deh2ehsn1y5e5" path="res://music/menu_music.wav" id="2_jylg6"]
+[ext_resource type="AudioStream" uid="uid://deh2ehsn1y5e5" path="res://assets/music/menu_music.wav" id="2_jylg6"]
+[ext_resource type="Script" uid="uid://c3jcrwqbelc1a" path="res://escenas/menu_principal/boton_salir.gd" id="3_00m27"]
+[ext_resource type="Theme" uid="uid://xfa3pvaxc7n6" path="res://themes/boton_menu_principal.tres" id="3_a8m85"]
+[ext_resource type="StyleBox" uid="uid://drmof8ty13byp" path="res://button_styles/normal.tres" id="4_lbtcn"]
+[ext_resource type="StyleBox" uid="uid://tp4ijdk4ohg6" path="res://button_styles/pressed.tres" id="5_7mlcq"]
+[ext_resource type="StyleBox" uid="uid://cmo0amkjbue43" path="res://button_styles/hover.tres" id="6_otvbs"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_00m27"]
 atlas = ExtResource("1_53ly4")
@@ -62,9 +67,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Camera2D" type="Camera2D" parent="." unique_id=1434505369]
-zoom = Vector2(1.045, 1.045)
-
 [node name="TextureRect" type="TextureRect" parent="." unique_id=153947687]
 layout_mode = 0
 offset_right = 1152.0
@@ -77,9 +79,11 @@ sprite_frames = SubResource("SpriteFrames_w4esp")
 animation = &"menu_scene"
 frame = 3
 frame_progress = 0.6558564
+centered = false
 script = ExtResource("2_00m27")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1691248058]
+custom_minimum_size = Vector2(0, 0.365)
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -87,29 +91,52 @@ anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -59.0
-offset_top = -184.0
+offset_top = -256.715
 offset_right = 59.0
+offset_bottom = -72.71472
 grow_horizontal = 2
 grow_vertical = 0
 theme_override_constants/separation = 20
 
 [node name="NuevaPartida" type="Button" parent="VBoxContainer" unique_id=552033556]
 layout_mode = 2
+theme = ExtResource("3_a8m85")
+theme_override_styles/normal = ExtResource("4_lbtcn")
+theme_override_styles/pressed = ExtResource("5_7mlcq")
+theme_override_styles/hover = ExtResource("6_otvbs")
 text = "Nueva Partida"
 
 [node name="Continuar" type="Button" parent="VBoxContainer" unique_id=1339630023]
 layout_mode = 2
+theme = ExtResource("3_a8m85")
+theme_override_styles/normal = ExtResource("4_lbtcn")
+theme_override_styles/pressed = ExtResource("5_7mlcq")
+theme_override_styles/hover = ExtResource("6_otvbs")
 text = "Continuar"
 
 [node name="Opciones" type="Button" parent="VBoxContainer" unique_id=1778464106]
 layout_mode = 2
+theme = ExtResource("3_a8m85")
+theme_override_styles/normal = ExtResource("4_lbtcn")
+theme_override_styles/pressed = ExtResource("5_7mlcq")
+theme_override_styles/hover = ExtResource("6_otvbs")
 text = "Opciones"
 
 [node name="Salir" type="Button" parent="VBoxContainer" unique_id=217126956]
 layout_mode = 2
+theme = ExtResource("3_a8m85")
+theme_override_styles/normal = ExtResource("4_lbtcn")
+theme_override_styles/pressed = ExtResource("5_7mlcq")
+theme_override_styles/hover = ExtResource("6_otvbs")
 text = "Salir"
+script = ExtResource("3_00m27")
 
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." unique_id=929469148]
 stream = ExtResource("2_jylg6")
 autoplay = true
 bus = &"Music"
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1434505369]
+position = Vector2(27.41, 14.065)
+anchor_mode = 0
+zoom = Vector2(1.05, 1.05)
