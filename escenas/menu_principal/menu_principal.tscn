@@ -9,6 +9,7 @@
 [ext_resource type="StyleBox" uid="uid://drmof8ty13byp" path="res://button_styles/normal.tres" id="4_lbtcn"]
 [ext_resource type="StyleBox" uid="uid://tp4ijdk4ohg6" path="res://button_styles/pressed.tres" id="5_7mlcq"]
 [ext_resource type="StyleBox" uid="uid://cmo0amkjbue43" path="res://button_styles/hover.tres" id="6_otvbs"]
+[ext_resource type="FontFile" uid="uid://bx2lmwn50h7le" path="res://assets/fonts/Peaberry-Font-v2.0/Peaberry-Font-v2.0/Peaberry Font Family/Peaberry Monospace/Peaberry-Mono.otf" id="9_w4esp"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_00m27"]
 atlas = ExtResource("1_53ly4")
@@ -59,6 +60,22 @@ animations = [{
 "name": &"menu_scene",
 "speed": 6.0
 }]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_otvbs"]
+bg_color = Color(0.30692264, 0.3069227, 0.30692258, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_blend = true
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="Theme" id="Theme_cceyl"]
+default_font = ExtResource("9_w4esp")
+default_font_size = 48
 
 [node name="MenuPrincipal" type="Control" unique_id=389689906]
 layout_mode = 3
@@ -132,6 +149,85 @@ theme_override_styles/pressed = ExtResource("5_7mlcq")
 theme_override_styles/hover = ExtResource("6_otvbs")
 text = "Salir"
 script = ExtResource("3_00m27")
+
+[node name="OpcionesVentana" type="Control" parent="." unique_id=1919874611]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="OpcionesVentana" unique_id=1291164698]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -495.0
+offset_top = -262.0
+offset_right = 507.0
+offset_bottom = 270.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_otvbs")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="OpcionesVentana/Panel" unique_id=1535991251]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -41.0
+offset_top = -52.0
+offset_right = 41.0
+offset_bottom = 52.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 20
+
+[node name="LabelTitulo" type="Label" parent="OpcionesVentana/Panel/VBoxContainer" unique_id=1854126581]
+texture_filter = 1
+layout_mode = 2
+theme = SubResource("Theme_cceyl")
+text = "Opciones"
+
+[node name="HBox_Maestro" type="HBoxContainer" parent="OpcionesVentana/Panel/VBoxContainer" unique_id=471013254]
+layout_mode = 2
+
+[node name="VolumenMaestro" type="Label" parent="OpcionesVentana/Panel/VBoxContainer/HBox_Maestro" unique_id=1532661949]
+layout_mode = 2
+text = "Volumen"
+
+[node name="HSliderMaestro" type="HSlider" parent="OpcionesVentana/Panel/VBoxContainer/HBox_Maestro" unique_id=205136065]
+layout_mode = 2
+
+[node name="HBox_Musica" type="HBoxContainer" parent="OpcionesVentana/Panel/VBoxContainer" unique_id=1832566930]
+layout_mode = 2
+
+[node name="VolumenMusica" type="Label" parent="OpcionesVentana/Panel/VBoxContainer/HBox_Musica" unique_id=1216632498]
+layout_mode = 2
+text = "Musica"
+
+[node name="HSliderMaestro" type="HSlider" parent="OpcionesVentana/Panel/VBoxContainer/HBox_Musica" unique_id=1203983509]
+layout_mode = 2
+
+[node name="HBox_SFX" type="HBoxContainer" parent="OpcionesVentana/Panel/VBoxContainer" unique_id=223326155]
+layout_mode = 2
+
+[node name="VolumenMaestro" type="Label" parent="OpcionesVentana/Panel/VBoxContainer/HBox_SFX" unique_id=225097904]
+layout_mode = 2
+text = "Efectos"
+
+[node name="HSliderMaestro" type="HSlider" parent="OpcionesVentana/Panel/VBoxContainer/HBox_SFX" unique_id=658092098]
+layout_mode = 2
+
+[node name="Volver" type="Button" parent="OpcionesVentana/Panel" unique_id=341363424]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
 
 [node name="FondoOscuro" type="ColorRect" parent="." unique_id=1677542349]
 visible = false

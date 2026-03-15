@@ -3,16 +3,13 @@ extends Control
 func _ready():
 	$VBoxContainer/Continuar.visible = ControladorPartida.has_any_save()
 
-
-
 func _on_Continuar_pressed():
 	$FondoOscuro.visible = true
-	$MenuSlots.visible = true
+	$FondoOscuro/MenuSlots.visible = true
 
-	cargar_slot(1, $MenuSlots/Slot1)
-	cargar_slot(2, $MenuSlots/Slot2)
-	cargar_slot(3, $MenuSlots/Slot3)
-
+	cargar_slot(1, $FondoOscuro/MenuSlots/Slot1)
+	cargar_slot(2, $FondoOscuro/MenuSlots/Slot2)
+	cargar_slot(3, $FondoOscuro/MenuSlots/Slot3)
 
 func cargar_slot(slot: int, nodo_slot: Control):
 	if ControladorPartida.slot_exists(slot):
@@ -23,6 +20,6 @@ func cargar_slot(slot: int, nodo_slot: Control):
 		nodo_slot.get_node("Datos/Vidas").text = str(data["lives"])
 	else:
 		nodo_slot.get_node("Miniatura").texture = null
-		nodo_slot.get_node("Datos/Fecha").text = "Vacío"
+		nodo_slot.get_node("Datos/Fecha").text = "Vacio"
 		nodo_slot.get_node("Datos/Tiempo").text = ""
 		nodo_slot.get_node("Datos/Vidas").text = ""
