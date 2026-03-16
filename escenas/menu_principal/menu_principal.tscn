@@ -220,7 +220,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
 max_value = 1.0
-step = 0.01
+step = 0.1
 value = 1.0
 
 [node name="HBox_Musica" type="HBoxContainer" parent="OpcionesVentana/Panel/VBoxContainer" unique_id=1832566930]
@@ -238,7 +238,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
 max_value = 1.0
-step = 0.01
+step = 0.1
 value = 1.0
 
 [node name="HBox_SFX" type="HBoxContainer" parent="OpcionesVentana/Panel/VBoxContainer" unique_id=223326155]
@@ -256,7 +256,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("3_a8m85")
 max_value = 1.0
-step = 0.01
+step = 0.1
 value = 1.0
 
 [node name="Volver" type="Button" parent="OpcionesVentana/Panel" unique_id=341363424]
