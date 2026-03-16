@@ -1,13 +1,33 @@
 [gd_scene format=3 uid="uid://bg7mbbr6mmnb6"]
 
+[ext_resource type="Script" uid="uid://dji2ia2d058j6" path="res://escenas/Personajes/Skerney/skerney.gd" id="1_t7uvj"]
 [ext_resource type="SpriteFrames" uid="uid://c4igdqgj5egvs" path="res://escenas/Personajes/Skerney/sprite_frames_skerney.tres" id="1_ujqax"]
+[ext_resource type="Script" uid="uid://dnx0gwfyd6flv" path="res://escenas/Personajes/Skerney/StateMachine.gd" id="3_170t5"]
+[ext_resource type="Script" uid="uid://b6ojhaapabfrp" path="res://escenas/Personajes/Skerney/states/Idle.gd" id="5_fp8k8"]
+[ext_resource type="Script" uid="uid://cbqvxo2tljku8" path="res://escenas/Personajes/Skerney/states/Walk.gd" id="6_fp8k8"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_t7uvj"]
+size = Vector2(28.85246, 31.475414)
 
-[node name="Skerney" type="CharacterBody2D" unique_id=2015512818]
+[node name="Skerney" type="CharacterBody2D" unique_id=2015512818 node_paths=PackedStringArray("anim")]
+texture_filter = 1
+script = ExtResource("1_t7uvj")
+anim = NodePath("AnimatedSprite2D")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=136827316]
 sprite_frames = ExtResource("1_ujqax")
+animation = &"idle_down"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=582105576]
+position = Vector2(0, 5.915)
+scale = Vector2(1.46, 1.46)
 shape = SubResource("RectangleShape2D_t7uvj")
+
+[node name="StateMachine" type="Node" parent="." unique_id=1890685755]
+script = ExtResource("3_170t5")
+
+[node name="Idle" type="Node" parent="StateMachine" unique_id=766949346]
+script = ExtResource("5_fp8k8")
+
+[node name="Walk" type="Node" parent="StateMachine" unique_id=1468605085]
+script = ExtResource("6_fp8k8")
