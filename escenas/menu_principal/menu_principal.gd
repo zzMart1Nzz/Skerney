@@ -72,6 +72,7 @@ func _on_h_slider_musica_value_changed(value):
 func _on_h_slider_sfx_value_changed(value):
 	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("SFX"), linear_to_db(value))
 	guardar_ajustes()
+	$SFX_Navigate.play()
 
 
 # ---------------------------------------------------------

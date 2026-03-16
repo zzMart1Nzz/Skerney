@@ -3,12 +3,15 @@
 [ext_resource type="Texture2D" uid="uid://cswwfs5c6gdob" path="res://assets/images/menu_scene/menu_scene_spritesheet.png" id="1_53ly4"]
 [ext_resource type="Script" uid="uid://dntddljydodsd" path="res://escenas/menu_principal/menu_principal.gd" id="1_otvbs"]
 [ext_resource type="Script" uid="uid://bb2mhg8b7b7lg" path="res://escenas/menu_principal/animacion_menu_principal.gd" id="2_00m27"]
-[ext_resource type="AudioStream" uid="uid://deh2ehsn1y5e5" path="res://assets/music/menu_music.wav" id="2_jylg6"]
+[ext_resource type="AudioStream" uid="uid://deh2ehsn1y5e5" path="res://assets/music/menu_music/menu_music.wav" id="2_jylg6"]
 [ext_resource type="Theme" uid="uid://xfa3pvaxc7n6" path="res://themes/boton_menu_principal.tres" id="3_a8m85"]
 [ext_resource type="StyleBox" uid="uid://drmof8ty13byp" path="res://button_styles/normal.tres" id="4_lbtcn"]
 [ext_resource type="StyleBox" uid="uid://tp4ijdk4ohg6" path="res://button_styles/pressed.tres" id="5_7mlcq"]
 [ext_resource type="StyleBox" uid="uid://cmo0amkjbue43" path="res://button_styles/hover.tres" id="6_otvbs"]
+[ext_resource type="Script" uid="uid://cwttcy11qsln0" path="res://scripts/boton_sonido/boton_sonido.gd" id="8_w4esp"]
 [ext_resource type="FontFile" uid="uid://bx2lmwn50h7le" path="res://assets/fonts/Peaberry-Font-v2.0/Peaberry-Font-v2.0/Peaberry Font Family/Peaberry Monospace/Peaberry-Mono.otf" id="9_w4esp"]
+[ext_resource type="AudioStream" uid="uid://b0hpb5h5ooube" path="res://assets/music/sfx/rollover.ogg" id="11_byxo4"]
+[ext_resource type="AudioStream" uid="uid://nf5sofyt4e4k" path="res://assets/music/sfx/select.ogg" id="12_n1516"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_00m27"]
 atlas = ExtResource("1_53ly4")
@@ -124,6 +127,7 @@ theme_override_styles/pressed = ExtResource("5_7mlcq")
 theme_override_styles/hover = ExtResource("6_otvbs")
 theme_override_styles/focus = ExtResource("6_otvbs")
 text = "Nueva Partida"
+script = ExtResource("8_w4esp")
 
 [node name="Continuar" type="Button" parent="VBoxContainer" unique_id=1339630023]
 layout_mode = 2
@@ -133,6 +137,7 @@ theme_override_styles/pressed = ExtResource("5_7mlcq")
 theme_override_styles/hover = ExtResource("6_otvbs")
 theme_override_styles/focus = ExtResource("6_otvbs")
 text = "Continuar"
+script = ExtResource("8_w4esp")
 
 [node name="Opciones" type="Button" parent="VBoxContainer" unique_id=1778464106]
 layout_mode = 2
@@ -142,6 +147,7 @@ theme_override_styles/pressed = ExtResource("5_7mlcq")
 theme_override_styles/hover = ExtResource("6_otvbs")
 theme_override_styles/focus = ExtResource("6_otvbs")
 text = "Opciones"
+script = ExtResource("8_w4esp")
 
 [node name="Salir" type="Button" parent="VBoxContainer" unique_id=217126956]
 layout_mode = 2
@@ -151,6 +157,7 @@ theme_override_styles/pressed = ExtResource("5_7mlcq")
 theme_override_styles/hover = ExtResource("6_otvbs")
 theme_override_styles/focus = ExtResource("6_otvbs")
 text = "Salir"
+script = ExtResource("8_w4esp")
 
 [node name="OpcionesVentana" type="Control" parent="." unique_id=1919874611]
 visible = false
@@ -266,9 +273,9 @@ theme_override_styles/pressed = ExtResource("5_7mlcq")
 theme_override_styles/hover = ExtResource("6_otvbs")
 theme_override_styles/focus = ExtResource("6_otvbs")
 text = "Volver"
+script = ExtResource("8_w4esp")
 
 [node name="FondoOscuro" type="ColorRect" parent="." unique_id=1677542349]
-visible = false
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
@@ -346,6 +353,14 @@ layout_mode = 2
 stream = ExtResource("2_jylg6")
 autoplay = true
 bus = &"Music"
+
+[node name="SFX_Navigate" type="AudioStreamPlayer2D" parent="." unique_id=1007941518]
+stream = ExtResource("11_byxo4")
+bus = &"SFX"
+
+[node name="SFX_Accept" type="AudioStreamPlayer2D" parent="." unique_id=2056808425]
+stream = ExtResource("12_n1516")
+bus = &"SFX"
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1434505369]
 position = Vector2(27.41, 14.065)
