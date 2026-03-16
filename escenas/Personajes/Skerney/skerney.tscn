@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://bg7mbbr6mmnb6"]
+
+[ext_resource type="SpriteFrames" uid="uid://c4igdqgj5egvs" path="res://escenas/Personajes/Skerney/sprite_frames_skerney.tres" id="1_ujqax"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_t7uvj"]
+
+[node name="Skerney" type="CharacterBody2D" unique_id=2015512818]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=136827316]
+sprite_frames = ExtResource("1_ujqax")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=582105576]
+shape = SubResource("RectangleShape2D_t7uvj")
