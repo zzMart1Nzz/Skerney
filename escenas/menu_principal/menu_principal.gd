@@ -9,7 +9,12 @@ func _ready():
 	$FondoOscuro.visible = false
 	$FondoOscuro/MenuSlots.visible = false
 	
+	#Carga los ajustes de sonido
 	cargar_ajustes()
+	
+	#El botón de nueva partida al ser el primero, queda seleccionado
+	$VBoxContainer/NuevaPartida.grab_focus()
+
 
 
 
@@ -42,6 +47,8 @@ func _on_continuar_pressed():
 func _on_opciones_pressed():
 	$VBoxContainer.visible = false
 	$OpcionesVentana.visible = true
+	$OpcionesVentana/Panel/VBoxContainer/HBox_Maestro/HSliderMaestro.grab_focus()
+
 
 
 # ---------------------------------------------------------
@@ -73,6 +80,8 @@ func _on_h_slider_sfx_value_changed(value):
 func _on_volver_pressed():
 	$OpcionesVentana.visible = false
 	$VBoxContainer.visible = true
+	$VBoxContainer/Opciones.grab_focus()
+
 
 
 # ---------------------------------------------------------
@@ -130,3 +139,18 @@ func cargar_ajustes():
 	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), linear_to_db(data["master"]))
 	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Music"), linear_to_db(data["musica"]))
 	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("SFX"), linear_to_db(data["sfx"]))
+
+
+func _unhandled_input(event):
+	if event.is_action_pressed("ui_cancel"):
+		
+		# Si estás en opciones → volver al menú
+		if $OpcionesVentana.visible:
+			_on_volver_pressed()
+			
+		# Si estás en los slots → volver al menú
+		elif $FondoOscuro.visible and $MenuSlots.visible:
+			$FondoOscuro.visible = false
+			$MenuSlots.visible = false
+			$VBoxContainer.visible = true
+			$VBoxContainer/Continuar.grab_focus()
