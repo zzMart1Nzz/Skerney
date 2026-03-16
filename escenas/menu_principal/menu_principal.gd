@@ -2,7 +2,7 @@ extends Control
 
 func _ready():
 	# Mostrar o no el botón Continuar
-	$VBoxContainer/Continuar.visible = ControladorPartida.has_any_save()
+	$VBoxContainer/CargarPartida.visible = ControladorPartida.has_any_save()
 
 	# Ocultar ventanas al inicio
 	$OpcionesVentana.visible = false

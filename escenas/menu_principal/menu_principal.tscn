@@ -129,14 +129,14 @@ theme_override_styles/focus = ExtResource("6_otvbs")
 text = "Nueva Partida"
 script = ExtResource("8_w4esp")
 
-[node name="Continuar" type="Button" parent="VBoxContainer" unique_id=1339630023]
+[node name="CargarPartida" type="Button" parent="VBoxContainer" unique_id=1339630023]
 layout_mode = 2
 theme = ExtResource("3_a8m85")
 theme_override_styles/normal = ExtResource("4_lbtcn")
 theme_override_styles/pressed = ExtResource("5_7mlcq")
 theme_override_styles/hover = ExtResource("6_otvbs")
 theme_override_styles/focus = ExtResource("6_otvbs")
-text = "Continuar"
+text = "Cargar Partida"
 script = ExtResource("8_w4esp")
 
 [node name="Opciones" type="Button" parent="VBoxContainer" unique_id=1778464106]
@@ -212,7 +212,7 @@ layout_mode = 2
 layout_mode = 2
 theme = ExtResource("3_a8m85")
 theme_override_fonts/font = ExtResource("9_w4esp")
-text = "Volumen"
+text = "General"
 
 [node name="HSliderMaestro" type="HSlider" parent="OpcionesVentana/Panel/VBoxContainer/HBox_Maestro" unique_id=205136065]
 texture_filter = 1
@@ -276,9 +276,12 @@ text = "Volver"
 script = ExtResource("8_w4esp")
 
 [node name="FondoOscuro" type="ColorRect" parent="." unique_id=1677542349]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 color = Color(1, 1, 1, 0.5019608)
 
 [node name="MenuSlots" type="VBoxContainer" parent="FondoOscuro" unique_id=1186505777]
@@ -368,7 +371,7 @@ anchor_mode = 0
 zoom = Vector2(1.05, 1.05)
 
 [connection signal="pressed" from="VBoxContainer/NuevaPartida" to="." method="_on_nueva_partida_pressed"]
-[connection signal="pressed" from="VBoxContainer/Continuar" to="." method="_on_continuar_pressed"]
+[connection signal="pressed" from="VBoxContainer/CargarPartida" to="." method="_on_continuar_pressed"]
 [connection signal="pressed" from="VBoxContainer/Opciones" to="." method="_on_opciones_pressed"]
 [connection signal="pressed" from="VBoxContainer/Salir" to="." method="_on_salir_pressed"]
 [connection signal="value_changed" from="OpcionesVentana/Panel/VBoxContainer/HBox_Maestro/HSliderMaestro" to="." method="_on_h_slider_maestro_value_changed"]
