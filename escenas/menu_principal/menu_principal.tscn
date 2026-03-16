@@ -175,59 +175,93 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_otvbs")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="OpcionesVentana/Panel" unique_id=1535991251]
 layout_mode = 1
-anchors_preset = 8
+anchors_preset = 5
 anchor_left = 0.5
-anchor_top = 0.5
 anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -41.0
-offset_top = -52.0
-offset_right = 41.0
-offset_bottom = 52.0
+offset_left = -266.0
+offset_top = 8.205
+offset_right = 266.0
+offset_bottom = 345.205
 grow_horizontal = 2
-grow_vertical = 2
 theme_override_constants/separation = 20
 
 [node name="LabelTitulo" type="Label" parent="OpcionesVentana/Panel/VBoxContainer" unique_id=1854126581]
 texture_filter = 1
+custom_minimum_size = Vector2(12.6, 0)
 layout_mode = 2
+size_flags_vertical = 0
 theme = SubResource("Theme_cceyl")
+theme_override_colors/font_color = Color(0.92156863, 0.92156863, 0.88235295, 1)
 text = "Opciones"
+horizontal_alignment = 1
 
 [node name="HBox_Maestro" type="HBoxContainer" parent="OpcionesVentana/Panel/VBoxContainer" unique_id=471013254]
 layout_mode = 2
 
 [node name="VolumenMaestro" type="Label" parent="OpcionesVentana/Panel/VBoxContainer/HBox_Maestro" unique_id=1532661949]
 layout_mode = 2
+theme = ExtResource("3_a8m85")
+theme_override_fonts/font = ExtResource("9_w4esp")
 text = "Volumen"
 
 [node name="HSliderMaestro" type="HSlider" parent="OpcionesVentana/Panel/VBoxContainer/HBox_Maestro" unique_id=205136065]
+texture_filter = 1
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+max_value = 1.0
+step = 0.01
+value = 1.0
 
 [node name="HBox_Musica" type="HBoxContainer" parent="OpcionesVentana/Panel/VBoxContainer" unique_id=1832566930]
 layout_mode = 2
 
 [node name="VolumenMusica" type="Label" parent="OpcionesVentana/Panel/VBoxContainer/HBox_Musica" unique_id=1216632498]
 layout_mode = 2
-text = "Musica"
+theme = ExtResource("3_a8m85")
+theme_override_fonts/font = ExtResource("9_w4esp")
+text = "Música "
 
-[node name="HSliderMaestro" type="HSlider" parent="OpcionesVentana/Panel/VBoxContainer/HBox_Musica" unique_id=1203983509]
+[node name="HSliderMusica" type="HSlider" parent="OpcionesVentana/Panel/VBoxContainer/HBox_Musica" unique_id=1203983509]
+texture_filter = 1
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+max_value = 1.0
+step = 0.01
+value = 1.0
 
 [node name="HBox_SFX" type="HBoxContainer" parent="OpcionesVentana/Panel/VBoxContainer" unique_id=223326155]
 layout_mode = 2
 
-[node name="VolumenMaestro" type="Label" parent="OpcionesVentana/Panel/VBoxContainer/HBox_SFX" unique_id=225097904]
+[node name="VolumenSFX" type="Label" parent="OpcionesVentana/Panel/VBoxContainer/HBox_SFX" unique_id=225097904]
 layout_mode = 2
+theme = ExtResource("3_a8m85")
+theme_override_fonts/font = ExtResource("9_w4esp")
 text = "Efectos"
 
-[node name="HSliderMaestro" type="HSlider" parent="OpcionesVentana/Panel/VBoxContainer/HBox_SFX" unique_id=658092098]
+[node name="HSliderSFX" type="HSlider" parent="OpcionesVentana/Panel/VBoxContainer/HBox_SFX" unique_id=658092098]
+texture_filter = 1
 layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.01
+value = 1.0
 
 [node name="Volver" type="Button" parent="OpcionesVentana/Panel" unique_id=341363424]
+texture_filter = 1
 layout_mode = 0
-offset_right = 8.0
-offset_bottom = 8.0
+offset_left = 5.9999995
+offset_top = 7.000001
+offset_right = 196.0
+offset_bottom = 65.0
+theme = ExtResource("3_a8m85")
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = ExtResource("4_lbtcn")
+theme_override_styles/pressed = ExtResource("5_7mlcq")
+theme_override_styles/hover = ExtResource("6_otvbs")
+text = "Volver"
+flat = true
 
 [node name="FondoOscuro" type="ColorRect" parent="." unique_id=1677542349]
 visible = false
@@ -237,7 +271,6 @@ offset_bottom = 40.0
 color = Color(1, 1, 1, 0.5019608)
 
 [node name="MenuSlots" type="VBoxContainer" parent="FondoOscuro" unique_id=1186505777]
-visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -245,9 +278,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -20.0
-offset_top = -20.0
+offset_top = -119.5
 offset_right = 20.0
-offset_bottom = 20.0
+offset_bottom = 119.5
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -305,7 +338,7 @@ layout_mode = 2
 [node name="Vidas" type="Label" parent="FondoOscuro/MenuSlots/Slot3/Datos" unique_id=645079363]
 layout_mode = 2
 
-[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." unique_id=929469148]
+[node name="Musica" type="AudioStreamPlayer2D" parent="." unique_id=929469148]
 stream = ExtResource("2_jylg6")
 autoplay = true
 bus = &"Music"
@@ -314,3 +347,12 @@ bus = &"Music"
 position = Vector2(27.41, 14.065)
 anchor_mode = 0
 zoom = Vector2(1.05, 1.05)
+
+[connection signal="pressed" from="VBoxContainer/NuevaPartida" to="." method="_on_nueva_partida_pressed"]
+[connection signal="pressed" from="VBoxContainer/Continuar" to="." method="_on_continuar_pressed"]
+[connection signal="pressed" from="VBoxContainer/Opciones" to="." method="_on_opciones_pressed"]
+[connection signal="pressed" from="VBoxContainer/Salir" to="." method="_on_salir_pressed"]
+[connection signal="value_changed" from="OpcionesVentana/Panel/VBoxContainer/HBox_Maestro/HSliderMaestro" to="." method="_on_h_slider_maestro_value_changed"]
+[connection signal="value_changed" from="OpcionesVentana/Panel/VBoxContainer/HBox_Musica/HSliderMusica" to="." method="_on_h_slider_musica_value_changed"]
+[connection signal="value_changed" from="OpcionesVentana/Panel/VBoxContainer/HBox_SFX/HSliderSFX" to="." method="_on_h_slider_sfx_value_changed"]
+[connection signal="pressed" from="OpcionesVentana/Panel/Volver" to="." method="_on_volver_pressed"]

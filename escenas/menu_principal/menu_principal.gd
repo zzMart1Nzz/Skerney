@@ -1,16 +1,83 @@
 extends Control
 
 func _ready():
+	# Mostrar o no el botón Continuar
 	$VBoxContainer/Continuar.visible = ControladorPartida.has_any_save()
 
-func _on_Continuar_pressed():
+	# Ocultar ventanas al inicio
+	$OpcionesVentana.visible = false
+	$FondoOscuro.visible = false
+	$FondoOscuro/MenuSlots.visible = false
+	
+	cargar_ajustes()
+
+
+
+# ---------------------------------------------------------
+#   NUEVA PARTIDA
+# ---------------------------------------------------------
+func _on_nueva_partida_pressed():
+	get_tree().change_scene_to_file("res://escenas/juego/juego.tscn")
+
+
+# ---------------------------------------------------------
+#   CONTINUAR
+# ---------------------------------------------------------
+func _on_continuar_pressed():
+	# Ocultar botones del menú
+	$VBoxContainer.visible = false
+
+	# Mostrar fondo oscuro y slots
 	$FondoOscuro.visible = true
-	$FondoOscuro/MenuSlots.visible = true
+	$MenuSlots.visible = true
 
-	cargar_slot(1, $FondoOscuro/MenuSlots/Slot1)
-	cargar_slot(2, $FondoOscuro/MenuSlots/Slot2)
-	cargar_slot(3, $FondoOscuro/MenuSlots/Slot3)
+	cargar_slot(1, $MenuSlots/Slot1)
+	cargar_slot(2, $MenuSlots/Slot2)
+	cargar_slot(3, $MenuSlots/Slot3)
 
+
+# ---------------------------------------------------------
+#   OPCIONES
+# ---------------------------------------------------------
+func _on_opciones_pressed():
+	$VBoxContainer.visible = false
+	$OpcionesVentana.visible = true
+
+
+# ---------------------------------------------------------
+#   SALIR
+# ---------------------------------------------------------
+func _on_salir_pressed():
+	get_tree().quit()
+
+
+# ---------------------------------------------------------
+#   SLIDERS DE AUDIO
+# ---------------------------------------------------------
+func _on_h_slider_maestro_value_changed(value):
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), linear_to_db(value))
+	guardar_ajustes()
+
+func _on_h_slider_musica_value_changed(value):
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Music"), linear_to_db(value))
+	guardar_ajustes()
+
+func _on_h_slider_sfx_value_changed(value):
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("SFX"), linear_to_db(value))
+	guardar_ajustes()
+
+
+# ---------------------------------------------------------
+#   BOTÓN VOLVER
+# ---------------------------------------------------------
+func _on_volver_pressed():
+	$OpcionesVentana.visible = false
+	$VBoxContainer.visible = true
+
+
+# ---------------------------------------------------------
+#   CARGAR SLOT
+# ---------------------------------------------------------
 func cargar_slot(slot: int, nodo_slot: Control):
 	if ControladorPartida.slot_exists(slot):
 		var data = ControladorPartida.load_game(slot)
@@ -20,6 +87,46 @@ func cargar_slot(slot: int, nodo_slot: Control):
 		nodo_slot.get_node("Datos/Vidas").text = str(data["lives"])
 	else:
 		nodo_slot.get_node("Miniatura").texture = null
-		nodo_slot.get_node("Datos/Fecha").text = "Vacio"
+		nodo_slot.get_node("Datos/Fecha").text = "Vacío"
 		nodo_slot.get_node("Datos/Tiempo").text = ""
 		nodo_slot.get_node("Datos/Vidas").text = ""
+		
+
+
+# ---------------------------------------------------------
+#   GUARDAR AJUSTES
+# ---------------------------------------------------------
+func guardar_ajustes():
+	var ajustes = {
+		"master": $OpcionesVentana/Panel/VBoxContainer/HBox_Maestro/HSliderMaestro.value,
+		"musica": $OpcionesVentana/Panel/VBoxContainer/HBox_Musica/HSliderMusica.value,
+		"sfx": $OpcionesVentana/Panel/VBoxContainer/HBox_SFX/HSliderSFX.value
+	}
+
+	var file = FileAccess.open("user://ajustes.json", FileAccess.WRITE)
+	file.store_string(JSON.stringify(ajustes))
+	file.close()
+
+# ---------------------------------------------------------
+#   CARGAR AJUSTES
+# ---------------------------------------------------------
+func cargar_ajustes():
+	if not FileAccess.file_exists("user://ajustes.json"):
+		return  # No hay archivo aún
+
+	var file = FileAccess.open("user://ajustes.json", FileAccess.READ)
+	var data = JSON.parse_string(file.get_as_text())
+	file.close()
+
+	if data == null:
+		return
+
+	# Aplicar valores a los sliders
+	$OpcionesVentana/Panel/VBoxContainer/HBox_Maestro/HSliderMaestro.value = data["master"]
+	$OpcionesVentana/Panel/VBoxContainer/HBox_Musica/HSliderMusica.value = data["musica"]
+	$OpcionesVentana/Panel/VBoxContainer/HBox_SFX/HSliderSFX.value = data["sfx"]
+
+	# Aplicar valores a los buses
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), linear_to_db(data["master"]))
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Music"), linear_to_db(data["musica"]))
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("SFX"), linear_to_db(data["sfx"]))
