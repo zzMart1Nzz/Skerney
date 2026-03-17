@@ -4,12 +4,29 @@ var finished := false
 
 func enter():
 	finished = false
-	var anim_name = "attack_" + player.last_direction
-	player.anim.play(anim_name)
 	player.velocity = Vector2.ZERO
 
+	# Reproducir sonido de ataque
+	player.audio_attack.play()
+
+	var anim_name := ""
+
+	match player.last_direction:
+		"up":
+			anim_name = "attack_up"
+		"down":
+			anim_name = "attack_down"
+		"left", "right":
+			anim_name = "attack_left"
+
+	player.anim.play(anim_name)
+
+
 func update(delta):
-	if player.anim.frame == player.anim.frames.get_frame_count(player.anim.animation) - 1:
+	var anim_name = player.anim.animation
+	var last_frame = player.anim.sprite_frames.get_frame_count(anim_name) - 1
+
+	if player.anim.frame == last_frame:
 		if not finished:
 			finished = true
 			state_machine.change_state("idle")

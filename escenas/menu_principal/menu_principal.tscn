@@ -10,8 +10,8 @@
 [ext_resource type="StyleBox" uid="uid://cmo0amkjbue43" path="res://button_styles/hover.tres" id="6_otvbs"]
 [ext_resource type="Script" uid="uid://cwttcy11qsln0" path="res://scripts/boton_sonido/boton_sonido.gd" id="8_w4esp"]
 [ext_resource type="FontFile" uid="uid://bx2lmwn50h7le" path="res://assets/fonts/Peaberry-Font-v2.0/Peaberry-Font-v2.0/Peaberry Font Family/Peaberry Monospace/Peaberry-Mono.otf" id="9_w4esp"]
-[ext_resource type="AudioStream" uid="uid://b0hpb5h5ooube" path="res://assets/music/sfx/rollover.ogg" id="11_byxo4"]
-[ext_resource type="AudioStream" uid="uid://nf5sofyt4e4k" path="res://assets/music/sfx/select.ogg" id="12_n1516"]
+[ext_resource type="AudioStream" uid="uid://b0hpb5h5ooube" path="res://assets/music/sfx/menu_sfx/rollover.ogg" id="11_byxo4"]
+[ext_resource type="AudioStream" uid="uid://nf5sofyt4e4k" path="res://assets/music/sfx/menu_sfx/select.ogg" id="12_n1516"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_00m27"]
 atlas = ExtResource("1_53ly4")

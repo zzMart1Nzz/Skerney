@@ -5,18 +5,22 @@
 [ext_resource type="Script" uid="uid://dnx0gwfyd6flv" path="res://escenas/Personajes/Skerney/StateMachine.gd" id="3_170t5"]
 [ext_resource type="Script" uid="uid://b6ojhaapabfrp" path="res://escenas/Personajes/Skerney/states/Idle.gd" id="5_fp8k8"]
 [ext_resource type="Script" uid="uid://cbqvxo2tljku8" path="res://escenas/Personajes/Skerney/states/Walk.gd" id="6_fp8k8"]
+[ext_resource type="Script" uid="uid://dvn762r8oc8p7" path="res://escenas/Personajes/Skerney/states/Attack.gd" id="6_ioach"]
+[ext_resource type="AudioStream" uid="uid://qrqfdu310da" path="res://assets/music/sfx/game_sfx/sword_swing.wav" id="7_ioach"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_t7uvj"]
 size = Vector2(28.85246, 31.475414)
 
-[node name="Skerney" type="CharacterBody2D" unique_id=2015512818 node_paths=PackedStringArray("anim")]
+[node name="Skerney" type="CharacterBody2D" unique_id=2015512818 node_paths=PackedStringArray("anim", "audio_attack")]
 texture_filter = 1
 script = ExtResource("1_t7uvj")
 anim = NodePath("AnimatedSprite2D")
+audio_attack = NodePath("AudioAttack")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=136827316]
 sprite_frames = ExtResource("1_ujqax")
-animation = &"idle_down"
+animation = &"attack_down"
+frame_progress = 0.7614443
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=582105576]
 position = Vector2(0, 5.915)
@@ -31,3 +35,10 @@ script = ExtResource("5_fp8k8")
 
 [node name="Walk" type="Node" parent="StateMachine" unique_id=1468605085]
 script = ExtResource("6_fp8k8")
+
+[node name="Attack" type="Node" parent="StateMachine" unique_id=220777205]
+script = ExtResource("6_ioach")
+
+[node name="AudioAttack" type="AudioStreamPlayer2D" parent="." unique_id=1394974187]
+stream = ExtResource("7_ioach")
+bus = &"SFX"

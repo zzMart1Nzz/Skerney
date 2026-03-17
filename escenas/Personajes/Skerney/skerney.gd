@@ -2,6 +2,8 @@ extends CharacterBody2D
 
 @export var speed: float = 120.0
 @export var anim: AnimatedSprite2D
+@export var audio_attack: AudioStreamPlayer2D
+
 
 var input_vector := Vector2.ZERO
 var last_direction := "down"
@@ -34,6 +36,7 @@ func _read_input():
 				last_direction = "up"
 			else:
 				last_direction = "down"
+
 
 
 	velocity = input_vector * speed
