@@ -60,3 +60,4 @@ position = Vector2(0, 3.605)
 zoom = Vector2(6.835, 6.835)
 
 [node name="FadeLayer" parent="." unique_id=956213540 instance=ExtResource("5_wkqe5")]
+visible = false

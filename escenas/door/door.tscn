@@ -9,10 +9,14 @@ size = Vector2(125, 127.45097)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_3njf0"]
 size = Vector2(128, 202.5)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gpcsj"]
+size = Vector2(128, 197)
+
 [node name="Door" type="Area2D" unique_id=961541402]
 collision_layer = 16
 collision_mask = 0
 script = ExtResource("1_sy8ia")
+next_scene = null
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2070707483]
 z_index = 3
@@ -33,3 +37,12 @@ position = Vector2(-3.25, 2.25)
 scale = Vector2(1.0555556, 0.9780488)
 texture = ExtResource("2_3njf0")
 hframes = 2
+
+[node name="EntryDetector" type="Area2D" parent="." unique_id=1314997892]
+z_index = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EntryDetector" unique_id=287915438]
+position = Vector2(-1, 2.5)
+shape = SubResource("RectangleShape2D_gpcsj")
+
+[connection signal="body_entered" from="EntryDetector" to="." method="_on_EntryDetector_body_entered"]
