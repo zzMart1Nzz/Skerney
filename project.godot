@@ -23,11 +23,16 @@ buses/default_bus_layout="uid://c0iopb0sc1y25"
 [autoload]
 
 ControladorPartida="*uid://cnq2xvkoe2dwf"
+FadeLayer="*uid://carispjjrf7bw"
 
 [display]
 
 window/size/mode=3
 window/stretch/mode="canvas_items"
+
+[global_group]
+
+Skerney=""
 
 [input]
 

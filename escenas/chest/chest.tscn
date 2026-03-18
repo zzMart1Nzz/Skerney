@@ -5,6 +5,9 @@
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wfc40"]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mdyj4"]
+size = Vector2(16, 16)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_dobld"]
 atlas = ExtResource("1_dobld")
 region = Rect2(0, 0, 15, 21)
@@ -17,13 +20,17 @@ region = Rect2(8, 21, 15, 21)
 atlas = ExtResource("1_dobld")
 region = Rect2(40, 21, 15, 21)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_7kifv"]
+atlas = ExtResource("1_dobld")
+region = Rect2(15, 0, 15, 16)
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_wfc40"]
 animations = [{
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_dobld")
 }],
-"loop": true,
+"loop": false,
 "name": &"closed",
 "speed": 5.0
 }, {
@@ -33,21 +40,34 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_6ecjn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7kifv")
 }],
-"loop": true,
+"loop": false,
 "name": &"open",
 "speed": 7.0
 }]
 
 [node name="Chest" type="Area2D" unique_id=1376242456]
+collision_layer = 16
+collision_mask = 0
 script = ExtResource("1_mdyj4")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1221117783]
-position = Vector2(0, -3)
+texture_filter = 1
+position = Vector2(0, -1)
+scale = Vector2(1.37, 1.37)
 shape = SubResource("RectangleShape2D_wfc40")
 
+[node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=1990818973]
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=1807016566]
+position = Vector2(0, -1)
+shape = SubResource("RectangleShape2D_mdyj4")
+
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=643379516]
+texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_wfc40")
-animation = &"open"
-frame = 1
-frame_progress = 0.6623606
+animation = &"closed"

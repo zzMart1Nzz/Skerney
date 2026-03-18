@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://dfbqskeqtq0mu"]
+
+[ext_resource type="Script" uid="uid://dwfn7d482u0dc" path="res://escenas/door/door.gd" id="1_sy8ia"]
+[ext_resource type="Texture2D" uid="uid://dfy7bcfkketfx" path="res://assets/images/sprites/door.png" id="2_3njf0"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0q78l"]
+
+[node name="Door" type="Node2D" unique_id=1626325775]
+script = ExtResource("1_sy8ia")
+next_scene = null
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1740061622]
+texture_filter = 1
+texture = ExtResource("2_3njf0")
+hframes = 2
+
+[node name="Area2D" type="Area2D" parent="." unique_id=144408489]
+collision_mask = 0
+audio_bus_name = &"SFX"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=2070707483]
+shape = SubResource("RectangleShape2D_0q78l")

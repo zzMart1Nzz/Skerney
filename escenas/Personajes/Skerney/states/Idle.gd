@@ -4,19 +4,19 @@ func enter():
 	_play_idle()
 
 func update(delta):
-	if Input.is_action_just_pressed("attack"):
+	if Input.is_action_just_pressed("action_button") and skerney.interactable == null:
 		state_machine.change_state("attack")
 		return
 
-	if player.input_vector != Vector2.ZERO:
+	if skerney.input_vector != Vector2.ZERO:
 		state_machine.change_state("walk")
 
 
 func _play_idle():
-	match player.last_direction:
+	match skerney.last_direction:
 		"up":
-			player.anim.play("idle_up")
+			skerney.anim.play("idle_up")
 		"down":
-			player.anim.play("idle_down")
+			skerney.anim.play("idle_down")
 		"left", "right":
-			player.anim.play("idle_left")
+			skerney.anim.play("idle_left")

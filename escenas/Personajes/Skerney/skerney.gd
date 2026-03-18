@@ -8,17 +8,25 @@ var input_vector := Vector2.ZERO
 var last_direction := "down"
 var has_key := false
 var interactable: Node = null
+var can_move := true   # ← ya lo tienes, perfecto
+
 
 func _physics_process(delta):
+	# Si no puede moverse (cutscene), no leer input del jugador
+	if not can_move:
+		velocity = Vector2.ZERO
+		move_and_slide()
+		return
+
 	_read_input()
 	move_and_slide()
 
-	# Acción inteligente: interactuar o atacar
 	if Input.is_action_just_pressed("action_button"):
 		if interactable:
 			interactable.interact()
 		else:
 			attack()
+
 
 func _read_input():
 	input_vector = Vector2.ZERO
@@ -44,22 +52,44 @@ func _read_input():
 			else:
 				last_direction = "down"
 
+		_update_interaction_detector()
+
 	velocity = input_vector * speed
 
-# Tu ataque original sigue funcionando igual
+
 func attack():
 	if audio_attack:
 		audio_attack.play()
-	# Aquí no toco nada: tu animación de ataque ya la controlas tú desde anim
+
+
+func _update_interaction_detector():
+	var offset := Vector2.ZERO
+
+	match last_direction:
+		"up":
+			offset = Vector2(0, -12)
+		"down":
+			offset = Vector2(0, 12)
+		"left":
+			offset = Vector2(-12, 0)
+		"right":
+			offset = Vector2(12, 0)
+
+	$InteractionDetector.position = offset
+
 
 func _on_chest_key_obtained():
 	has_key = true
 	print("Has obtenido una llave.")
 
-func _on_InteractionDetector_body_entered(body):
-	if body.has_method("interact"):
-		interactable = body
 
-func _on_InteractionDetector_body_exited(body):
-	if interactable == body:
+func _on_InteractionDetector_area_entered(area):
+	if area.has_method("interact"):
+		interactable = area
+		print("Detectado interactuable: ", area.name)
+
+
+func _on_InteractionDetector_area_exited(area):
+	if interactable == area:
 		interactable = null
+		print("Interactuable salido: ", area.name)

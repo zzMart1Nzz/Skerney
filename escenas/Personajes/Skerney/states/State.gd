@@ -2,10 +2,10 @@ extends Node
 class_name State
 
 var state_machine
-var player
+var skerney
 
 func _ready():
-	player = get_parent().get_parent()
+	skerney = get_parent().get_parent()
 
 func enter():
 	pass
