@@ -7,6 +7,7 @@ extends CharacterBody2D
 
 var input_vector := Vector2.ZERO
 var last_direction := "down"
+var has_key := false
 
 func _physics_process(delta):
 	_read_input()
@@ -40,3 +41,8 @@ func _read_input():
 
 
 	velocity = input_vector * speed
+	
+
+
+func _on_chest_key_obtained():
+	has_key = true

@@ -9,7 +9,7 @@
 [ext_resource type="AudioStream" uid="uid://qrqfdu310da" path="res://assets/music/sfx/game_sfx/sword_swing.wav" id="7_ioach"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_t7uvj"]
-size = Vector2(28.85246, 31.475414)
+size = Vector2(35, 40.287773)
 
 [node name="Skerney" type="CharacterBody2D" unique_id=2015512818 node_paths=PackedStringArray("anim", "audio_attack")]
 texture_filter = 1
@@ -18,13 +18,16 @@ anim = NodePath("AnimatedSprite2D")
 audio_attack = NodePath("AudioAttack")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=136827316]
+z_index = 3
+scale = Vector2(0.585, 0.585)
 sprite_frames = ExtResource("1_ujqax")
 animation = &"attack_down"
 frame_progress = 0.7614443
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=582105576]
-position = Vector2(0, 5.915)
-scale = Vector2(1.46, 1.46)
+z_index = 3
+position = Vector2(-1.7881393e-07, 3.9999995)
+scale = Vector2(0.4, 0.695)
 shape = SubResource("RectangleShape2D_t7uvj")
 
 [node name="StateMachine" type="Node" parent="." unique_id=1890685755]
