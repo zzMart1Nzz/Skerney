@@ -1,6 +1,6 @@
 extends CharacterBody2D
 
-@export var speed: float = 120.0
+@export var speed: float = 60.0
 @export var anim: AnimatedSprite2D
 @export var audio_attack: AudioStreamPlayer2D
 

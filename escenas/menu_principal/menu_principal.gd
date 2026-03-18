@@ -1,19 +1,18 @@
 extends Control
 
+var modo_slots := ""  # "new" o "load"
+
 func _ready():
-	# Mostrar o no el botón Continuar
 	$VBoxContainer/CargarPartida.visible = ControladorPartida.has_any_save()
 
-	# Ocultar ventanas al inicio
 	$OpcionesVentana.visible = false
 	$FondoOscuro.visible = false
 	$FondoOscuro/MenuSlots.visible = false
 	
-	#Carga los ajustes de sonido
 	cargar_ajustes()
-	
-	#El botón de nueva partida al ser el primero, queda seleccionado
 	$VBoxContainer/NuevaPartida.grab_focus()
+	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
+
 
 
 
@@ -22,23 +21,84 @@ func _ready():
 #   NUEVA PARTIDA
 # ---------------------------------------------------------
 func _on_nueva_partida_pressed():
-	get_tree().change_scene_to_file("res://escenas/juego/juego.tscn")
-
-
-# ---------------------------------------------------------
-#   CONTINUAR
-# ---------------------------------------------------------
-func _on_continuar_pressed():
-	# Ocultar botones del menú
+	modo_slots = "new"
 	$VBoxContainer.visible = false
-
-	# Mostrar fondo oscuro y slots
 	$FondoOscuro.visible = true
-	$MenuSlots.visible = true
+	$FondoOscuro/MenuSlots.visible = true
 
-	cargar_slot(1, $MenuSlots/Slot1)
-	cargar_slot(2, $MenuSlots/Slot2)
-	cargar_slot(3, $MenuSlots/Slot3)
+	_update_slots()
+	$FondoOscuro/MenuSlots/Slot1.grab_focus()
+
+
+
+# ---------------------------------------------------------
+#   CONTINUAR / CARGAR PARTIDA
+# ---------------------------------------------------------
+func _on_cargar_partida_pressed():
+	modo_slots = "load"
+	$VBoxContainer.visible = false
+	$FondoOscuro.visible = true
+	$FondoOscuro/MenuSlots.visible = true
+
+	_update_slots()
+	$FondoOscuro/MenuSlots/Slot1.grab_focus()
+
+
+
+# ---------------------------------------------------------
+#   ACTUALIZAR INFORMACIÓN DE SLOTS
+# ---------------------------------------------------------
+func _update_slots():
+	for i in range(1, 4):
+		var slot_node = $FondoOscuro/MenuSlots.get_node("Slot%d" % i)
+
+		if ControladorPartida.slot_exists(i):
+			var data = ControladorPartida.load_game(i)
+			slot_node.get_node("Miniatura").texture = ControladorPartida.load_thumbnail(i)
+			slot_node.get_node("Datos/Fecha").text = data.get("timestamp", "Fecha desconocida")
+			slot_node.get_node("Datos/Tiempo").text = str(data.get("play_time", 0) / 60) + " min"
+			slot_node.get_node("Datos/Vidas").text = str(data.get("lives", 3))
+		else:
+			slot_node.get_node("Miniatura").texture = null
+			slot_node.get_node("Datos/Fecha").text = "Vacío"
+			slot_node.get_node("Datos/Tiempo").text = ""
+			slot_node.get_node("Datos/Vidas").text = ""
+
+
+
+# ---------------------------------------------------------
+#   ACCIÓN AL PULSAR UN SLOT
+# ---------------------------------------------------------
+func _on_slot_pressed(slot: int):
+
+	if modo_slots == "new":
+		if ControladorPartida.slot_exists(slot):
+			ControladorPartida.delete_slot(slot)
+
+		FadeLayer.fade_out_and_call(func():
+			get_tree().change_scene_to_file("res://escenas/dungeon_1/la_cripta_del_olvido/la_cripta_del_olvido.tscn")
+		)
+
+	elif modo_slots == "load":
+		if ControladorPartida.slot_exists(slot):
+			FadeLayer.fade_out_and_call(func():
+				ControladorPartida.continue_game(slot)
+			)
+
+
+
+# ---------------------------------------------------------
+#   SLOTS PRESSED (CONEXIONES)
+# ---------------------------------------------------------
+func _on_slot_1_pressed():
+	_on_slot_pressed(1)
+
+func _on_slot_2_pressed():
+	_on_slot_pressed(2)
+
+func _on_slot_3_pressed():
+	_on_slot_pressed(3)
+
 
 
 # ---------------------------------------------------------
@@ -58,6 +118,7 @@ func _on_salir_pressed():
 	get_tree().quit()
 
 
+
 # ---------------------------------------------------------
 #   SLIDERS DE AUDIO
 # ---------------------------------------------------------
@@ -75,8 +136,9 @@ func _on_h_slider_sfx_value_changed(value):
 	$SFX_Navigate.play()
 
 
+
 # ---------------------------------------------------------
-#   BOTÓN VOLVER
+#   BOTÓN VOLVER (OPCIONES)
 # ---------------------------------------------------------
 func _on_volver_pressed():
 	$OpcionesVentana.visible = false
@@ -86,21 +148,14 @@ func _on_volver_pressed():
 
 
 # ---------------------------------------------------------
-#   CARGAR SLOT
+#   BOTÓN VOLVER (SLOTS)
 # ---------------------------------------------------------
-func cargar_slot(slot: int, nodo_slot: Control):
-	if ControladorPartida.slot_exists(slot):
-		var data = ControladorPartida.load_game(slot)
-		nodo_slot.get_node("Miniatura").texture = ControladorPartida.load_thumbnail(slot)
-		nodo_slot.get_node("Datos/Fecha").text = data["timestamp"]
-		nodo_slot.get_node("Datos/Tiempo").text = str(data["play_time"] / 60) + " min"
-		nodo_slot.get_node("Datos/Vidas").text = str(data["lives"])
-	else:
-		nodo_slot.get_node("Miniatura").texture = null
-		nodo_slot.get_node("Datos/Fecha").text = "Vacío"
-		nodo_slot.get_node("Datos/Tiempo").text = ""
-		nodo_slot.get_node("Datos/Vidas").text = ""
-		
+func _on_volver_load_pressed():
+	$FondoOscuro.visible = false
+	$FondoOscuro/MenuSlots.visible = false
+	$VBoxContainer.visible = true
+	$VBoxContainer/NuevaPartida.grab_focus()
+
 
 
 # ---------------------------------------------------------
@@ -117,12 +172,14 @@ func guardar_ajustes():
 	file.store_string(JSON.stringify(ajustes))
 	file.close()
 
+
+
 # ---------------------------------------------------------
 #   CARGAR AJUSTES
 # ---------------------------------------------------------
 func cargar_ajustes():
 	if not FileAccess.file_exists("user://ajustes.json"):
-		return  # No hay archivo aún
+		return
 
 	var file = FileAccess.open("user://ajustes.json", FileAccess.READ)
 	var data = JSON.parse_string(file.get_as_text())
@@ -131,27 +188,24 @@ func cargar_ajustes():
 	if data == null:
 		return
 
-	# Aplicar valores a los sliders
 	$OpcionesVentana/Panel/VBoxContainer/HBox_Maestro/HSliderMaestro.value = data["master"]
 	$OpcionesVentana/Panel/VBoxContainer/HBox_Musica/HSliderMusica.value = data["musica"]
 	$OpcionesVentana/Panel/VBoxContainer/HBox_SFX/HSliderSFX.value = data["sfx"]
 
-	# Aplicar valores a los buses
 	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), linear_to_db(data["master"]))
 	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Music"), linear_to_db(data["musica"]))
 	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("SFX"), linear_to_db(data["sfx"]))
 
 
+
+# ---------------------------------------------------------
+#   INPUT (VOLVER ATRÁS)
+# ---------------------------------------------------------
 func _unhandled_input(event):
 	if event.is_action_pressed("ui_cancel"):
-		
-		# Si estás en opciones → volver al menú
+
 		if $OpcionesVentana.visible:
 			_on_volver_pressed()
-			
-		# Si estás en los slots → volver al menú
-		elif $FondoOscuro.visible and $MenuSlots.visible:
-			$FondoOscuro.visible = false
-			$MenuSlots.visible = false
-			$VBoxContainer.visible = true
-			$VBoxContainer/Continuar.grab_focus()
+
+		elif $FondoOscuro.visible and $FondoOscuro/MenuSlots.visible:
+			_on_volver_load_pressed()

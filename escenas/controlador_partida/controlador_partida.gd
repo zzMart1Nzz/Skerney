@@ -91,3 +91,29 @@ func capture_thumbnail() -> Image:
 	var img := get_viewport().get_texture().get_image()
 	img.resize(256, 144)
 	return img
+
+
+# ---------------------------------------------------------
+#   INICIAR NUEVA PARTIDA (SIN GUARDAR NADA)
+# ---------------------------------------------------------
+func new_game(slot: int):
+	# NO guarda nada
+	# NO crea miniatura
+	# NO crea archivo de guardado
+
+	# Simplemente carga el nivel inicial
+	get_tree().change_scene_to_file("res://escenas/dungeon_1/la_cripta_del_olvido/la_cripta_del_olvido.tscn")
+
+
+# ---------------------------------------------------------
+#   BORRAR UNA PARTIDA
+# ---------------------------------------------------------
+func delete_slot(slot: int):
+	var path := SLOT_PATH % slot
+	var dir := DirAccess.open(path)
+
+	if dir:
+		if dir.file_exists(DATA_FILE):
+			dir.remove(DATA_FILE)
+		if dir.file_exists(THUMB_FILE):
+			dir.remove(THUMB_FILE)
