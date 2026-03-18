@@ -1,62 +1,8 @@
 [gd_scene format=4 uid="uid://du8pkohuce27d"]
 
 [ext_resource type="TileSet" uid="uid://vl6t6e3av17h" path="res://tile_sets/dungeon_cave.tres" id="1_qj4uc"]
+[ext_resource type="PackedScene" uid="uid://mw2i7ch6yucu" path="res://escenas/chest/chest.tscn" id="2_783ew"]
 [ext_resource type="PackedScene" uid="uid://bg7mbbr6mmnb6" path="res://escenas/Personajes/Skerney/skerney.tscn" id="2_qt0q4"]
-[ext_resource type="Script" uid="uid://drg2p048wgur5" path="res://escenas/dungeon_1/la_cripta_del_olvido/fade_layer.gd" id="3_783ew"]
-
-[sub_resource type="Animation" id="Animation_783ew"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("ColorRect:modulate:a")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [1.0]
-}
-
-[sub_resource type="Animation" id="Animation_qa2il"]
-resource_name = "fade_in"
-length = 0.25
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("ColorRect:modulate:a")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.05, 0.1, 0.15, 0.2, 0.25),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
-"update": 1,
-"values": [1.0, 0.8, 0.6, 0.4, 0.2, 0.0]
-}
-
-[sub_resource type="Animation" id="Animation_qt0q4"]
-resource_name = "fade_out"
-length = 0.25
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("ColorRect:modulate:a")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.05, 0.1, 0.15, 0.2, 0.25),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
-"update": 1,
-"values": [0.0, 0.2, 0.4, 0.6, 0.8, 1.0]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_783ew"]
-_data = {
-&"RESET": SubResource("Animation_783ew"),
-&"fade_in": SubResource("Animation_qa2il"),
-&"fade_out": SubResource("Animation_qt0q4")
-}
 
 [node name="LaCriptaDelOlvido" type="Node2D" unique_id=1057367277]
 
@@ -82,7 +28,7 @@ tile_set = ExtResource("1_qj4uc")
 [node name="Obstacles" type="TileMapLayer" parent="TilemapLayers" unique_id=1138793835]
 z_index = 3
 texture_filter = 1
-tile_map_data = PackedByteArray("AAAFAP//AAAAAAUAAAD6////AAAAAAUAAAABAAMAAAAAAAUAAAD//wMAAAAAAAUAAAAAAP//AgAAAAAAAAAAAPv/AQASAAQAAAA=")
+tile_map_data = PackedByteArray("AAAFAP//AAAAAAUAAAD6////AAAAAAUAAAABAAMAAAAAAAUAAAD//wMAAAAAAAUAAAA=")
 tile_set = ExtResource("1_qj4uc")
 
 [node name="Decoration" type="TileMapLayer" parent="TilemapLayers" unique_id=514344503]
@@ -96,6 +42,8 @@ y_sort_enabled = true
 texture_filter = 1
 tile_set = ExtResource("1_qj4uc")
 
+[node name="Chest" parent="." unique_id=1376242456 instance=ExtResource("2_783ew")]
+
 [node name="Skerney" parent="." unique_id=2015512818 instance=ExtResource("2_qt0q4")]
 position = Vector2(7.9999995, 28)
 scale = Vector2(0.66, 0.66)
@@ -103,16 +51,3 @@ scale = Vector2(0.66, 0.66)
 [node name="Camera2D" type="Camera2D" parent="Skerney" unique_id=1112979491]
 position = Vector2(0, 3.605)
 zoom = Vector2(6.835, 6.835)
-
-[node name="FadeLayer" type="CanvasLayer" parent="." unique_id=1759866762]
-script = ExtResource("3_783ew")
-
-[node name="ColorRect" type="ColorRect" parent="FadeLayer" unique_id=51851392]
-offset_left = -167.0
-offset_top = -135.0
-offset_right = 179.0
-offset_bottom = 113.0
-color = Color(0, 0, 0, 1)
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="FadeLayer" unique_id=1561886841]
-libraries/ = SubResource("AnimationLibrary_783ew")

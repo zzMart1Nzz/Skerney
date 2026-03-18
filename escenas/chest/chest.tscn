@@ -3,6 +3,8 @@
 [ext_resource type="Texture2D" uid="uid://lriful4au8fk" path="res://assets/images/tileset/objects.png" id="1_dobld"]
 [ext_resource type="Script" uid="uid://bkx730alaeiu3" path="res://escenas/chest/chest.gd" id="1_mdyj4"]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wfc40"]
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_dobld"]
 atlas = ExtResource("1_dobld")
 region = Rect2(0, 0, 15, 21)
@@ -37,16 +39,15 @@ animations = [{
 "speed": 7.0
 }]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_wfc40"]
-
-[node name="Chest" type="Node2D" unique_id=1965758260]
+[node name="Chest" type="Area2D" unique_id=1376242456]
 script = ExtResource("1_mdyj4")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1221117783]
+position = Vector2(0, -3)
+shape = SubResource("RectangleShape2D_wfc40")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=643379516]
 sprite_frames = SubResource("SpriteFrames_wfc40")
-animation = &"closed"
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1221117783]
-shape = SubResource("RectangleShape2D_wfc40")
-
-[node name="Area2D" type="Area2D" parent="." unique_id=1333434897]
+animation = &"open"
+frame = 1
+frame_progress = 0.6623606

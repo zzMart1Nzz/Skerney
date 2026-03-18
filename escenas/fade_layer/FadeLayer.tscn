@@ -1,0 +1,71 @@
+[gd_scene format=3 uid="uid://carispjjrf7bw"]
+
+[ext_resource type="Script" uid="uid://drg2p048wgur5" path="res://escenas/fade_layer/fade_layer.gd" id="1_vd3h5"]
+
+[sub_resource type="Animation" id="Animation_783ew"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ColorRect:modulate:a")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [1.0]
+}
+
+[sub_resource type="Animation" id="Animation_qa2il"]
+resource_name = "fade_in"
+length = 0.25
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ColorRect:modulate:a")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.05, 0.1, 0.15, 0.2, 0.25),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [1.0, 0.8, 0.6, 0.4, 0.2, 0.0]
+}
+
+[sub_resource type="Animation" id="Animation_qt0q4"]
+resource_name = "fade_out"
+length = 0.25
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ColorRect:modulate:a")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.05, 0.1, 0.15, 0.2, 0.25),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0.0, 0.2, 0.4, 0.6, 0.8, 1.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_eyjrr"]
+_data = {
+&"RESET": SubResource("Animation_783ew"),
+&"fade_in": SubResource("Animation_qa2il"),
+&"fade_out": SubResource("Animation_qt0q4")
+}
+
+[node name="FadeLayer" type="CanvasLayer" unique_id=956213540]
+script = ExtResource("1_vd3h5")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=591004959]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=641745844]
+libraries/ = SubResource("AnimationLibrary_eyjrr")

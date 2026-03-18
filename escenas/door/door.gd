@@ -6,19 +6,19 @@ extends Area2D
 
 var opened := false
 
-func _on_body_entered(body: Node):
+func interact():
 	if opened:
 		return
 
-	if body.name == "Skerney":
-		if body.has_key:
-			open_door()
-		else:
-			print("Necesitas una llave.") # Más adelante lo cambias por tu UI
+	var player := get_tree().get_first_node_in_group("player")
+	if player and player.has_key:
+		open_door()
+	else:
+		print("Necesitas una llave.")
 
 func open_door():
 	opened = true
-	sprite.frame = 1  # Frame 1 = puerta abierta
+	sprite.frame = 1
 	collision.disabled = true
 
 	FadeLayer.fade_out_and_call(func():

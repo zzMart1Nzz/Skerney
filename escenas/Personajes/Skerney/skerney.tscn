@@ -11,6 +11,8 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_t7uvj"]
 size = Vector2(35, 40.287773)
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_ioach"]
+
 [node name="Skerney" type="CharacterBody2D" unique_id=2015512818 node_paths=PackedStringArray("anim", "audio_attack")]
 texture_filter = 1
 script = ExtResource("1_t7uvj")
@@ -45,3 +47,13 @@ script = ExtResource("6_ioach")
 [node name="AudioAttack" type="AudioStreamPlayer2D" parent="." unique_id=1394974187]
 stream = ExtResource("7_ioach")
 bus = &"SFX"
+
+[node name="InteractionDetector" type="Area2D" parent="." unique_id=1079819755]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionDetector" unique_id=225544408]
+position = Vector2(0, 4)
+scale = Vector2(2.112, 2.147)
+shape = SubResource("CircleShape2D_ioach")
+
+[connection signal="body_entered" from="InteractionDetector" to="." method="_on_InteractionDetector_body_entered"]
+[connection signal="body_exited" from="InteractionDetector" to="." method="_on_InteractionDetector_body_exited"]
