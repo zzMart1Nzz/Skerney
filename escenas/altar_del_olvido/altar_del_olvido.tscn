@@ -1,0 +1,42 @@
+[gd_scene format=3 uid="uid://bqvfvyg8g65w0"]
+
+[ext_resource type="Script" uid="uid://dnyuaod6xugok" path="res://punto_guardado.gd" id="1_w7426"]
+[ext_resource type="Texture2D" uid="uid://wskwtmgke25q" path="res://assets/images/tileset/cave.png" id="2_6ffdc"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_0eyw4"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s4vfl"]
+atlas = ExtResource("2_6ffdc")
+region = Rect2(128, 0, 16, 50)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_0t026"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s4vfl")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_w7426"]
+
+[node name="AltarDelOlvido" type="Area2D" unique_id=1269711587]
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("1_w7426")
+mensaje = "\"Memorias grabadas en el Altar del Olvido\""
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1900316352]
+shape = SubResource("CircleShape2D_0eyw4")
+
+[node name="Sprite2D" type="AnimatedSprite2D" parent="." unique_id=1217684596]
+sprite_frames = SubResource("SpriteFrames_0t026")
+animation = &"idle"
+
+[node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=1537664408]
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=246818826]
+shape = SubResource("CircleShape2D_w7426")

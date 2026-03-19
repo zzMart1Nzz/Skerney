@@ -14,7 +14,7 @@ config/name="Skerney"
 run/main_scene="uid://cduk207fxbwpn"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 boot_splash/show_image=false
-config/icon="uid://jy87inl3jut8"
+config/icon="uid://dfkt8dbrhnhl1"
 config/windows_native_icon="res://assets/images/ico/skerney.ico"
 
 [audio]

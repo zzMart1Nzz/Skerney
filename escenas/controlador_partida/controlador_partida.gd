@@ -5,6 +5,10 @@ const SLOT_PATH := "user://saves/slot%d/"
 const DATA_FILE := "data.save"
 const THUMB_FILE := "thumbnail.png"
 
+var current_slot: int = 0
+var temp_data: Dictionary = {}   # Guardado temporal en RAM
+
+
 func _ready():
 	ensure_save_folder()
 
@@ -38,7 +42,7 @@ func slot_exists(slot: int) -> bool:
 
 
 # ---------------------------------------------------------
-#   GUARDAR PARTIDA EN UN SLOT
+#   GUARDAR PARTIDA EN UN SLOT (PERMANENTE)
 # ---------------------------------------------------------
 func save_game(slot: int, data: Dictionary, thumbnail: Image):
 	var path := SLOT_PATH % slot
@@ -57,18 +61,27 @@ func save_game(slot: int, data: Dictionary, thumbnail: Image):
 	# Guardar miniatura
 	thumbnail.save_png(path + THUMB_FILE)
 
+	# Actualizar RAM
+	temp_data = data
+
 
 # ---------------------------------------------------------
-#   CARGAR PARTIDA DE UN SLOT
+#   CARGAR PARTIDA (ROM si existe, si no RAM)
 # ---------------------------------------------------------
 func load_game(slot: int) -> Dictionary:
-	var path := SLOT_PATH % slot + DATA_FILE
-	if FileAccess.file_exists(path):
+	current_slot = slot
+
+	# Si existe guardado permanente, cargarlo
+	if slot_exists(slot):
+		var path := SLOT_PATH % slot + DATA_FILE
 		var file := FileAccess.open(path, FileAccess.READ)
 		var data: Dictionary = file.get_var()
 		file.close()
+		temp_data = data
 		return data
-	return {}
+
+	# Si no existe, usar el guardado temporal
+	return temp_data
 
 
 # ---------------------------------------------------------
@@ -94,15 +107,20 @@ func capture_thumbnail() -> Image:
 
 
 # ---------------------------------------------------------
-#   INICIAR NUEVA PARTIDA (SIN GUARDAR NADA)
+#   INICIAR NUEVA PARTIDA (GUARDADO TEMPORAL)
 # ---------------------------------------------------------
 func new_game(slot: int):
-	# NO guarda nada
-	# NO crea miniatura
-	# NO crea archivo de guardado
+	current_slot = slot
 
-	# Simplemente carga el nivel inicial
-	get_tree().change_scene_to_file("res://escenas/dungeon_1/la_cripta_del_olvido/la_cripta_del_olvido.tscn")
+	temp_data = {
+		"level": "res://escenas/dungeon_1/la_cripta_del_olvido/la_cripta_del_olvido.tscn",
+		"player_position": Vector2(0, 0),
+		"timestamp": Time.get_datetime_string_from_system(),
+		"play_time": 0,
+		"lives": 3
+	}
+
+	get_tree().change_scene_to_file(temp_data["level"])
 
 
 # ---------------------------------------------------------
