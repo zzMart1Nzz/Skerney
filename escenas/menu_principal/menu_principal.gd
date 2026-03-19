@@ -15,8 +15,6 @@ func _ready():
 
 
 
-
-
 # ---------------------------------------------------------
 #   NUEVA PARTIDA
 # ---------------------------------------------------------
@@ -53,7 +51,7 @@ func _update_slots():
 		var slot_node = $FondoOscuro/MenuSlots.get_node("Slot%d" % i)
 
 		if ControladorPartida.slot_exists(i):
-			var data = ControladorPartida.load_game(i)
+			var data = ControladorPartida.load_game_data(i)
 			slot_node.get_node("Miniatura").texture = ControladorPartida.load_thumbnail(i)
 			slot_node.get_node("Datos/Fecha").text = data.get("timestamp", "Fecha desconocida")
 			slot_node.get_node("Datos/Tiempo").text = str(data.get("play_time", 0) / 60) + " min"
@@ -75,14 +73,15 @@ func _on_slot_pressed(slot: int):
 		if ControladorPartida.slot_exists(slot):
 			ControladorPartida.delete_slot(slot)
 
+		# Aquí solo añadimos esto: delegar en ControladorPartida
 		FadeLayer.fade_out_and_call(func():
-			get_tree().change_scene_to_file("res://escenas/dungeon_1/la_cripta_del_olvido/la_cripta_del_olvido.tscn")
+			ControladorPartida.new_game(slot)
 		)
 
 	elif modo_slots == "load":
 		if ControladorPartida.slot_exists(slot):
 			FadeLayer.fade_out_and_call(func():
-				ControladorPartida.continue_game(slot)
+				ControladorPartida.load_game(slot)
 			)
 
 

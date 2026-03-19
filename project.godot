@@ -25,6 +25,7 @@ buses/default_bus_layout="uid://c0iopb0sc1y25"
 
 ControladorPartida="*uid://cnq2xvkoe2dwf"
 FadeLayer="*uid://carispjjrf7bw"
+HUD="*uid://dm0352mkxet6c"
 
 [display]
 

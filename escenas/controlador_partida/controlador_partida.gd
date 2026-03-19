@@ -66,22 +66,35 @@ func save_game(slot: int, data: Dictionary, thumbnail: Image):
 
 
 # ---------------------------------------------------------
-#   CARGAR PARTIDA (ROM si existe, si no RAM)
+# CARGA LA PARTIDA COMPLETA (COROUTINE)
 # ---------------------------------------------------------
-func load_game(slot: int) -> Dictionary:
+func load_game(slot: int):
 	current_slot = slot
 
-	# Si existe guardado permanente, cargarlo
+	var data := load_game_data(slot)
+	temp_data = data
+
+	if data.has("level"):
+		get_tree().change_scene_to_file(data["level"])
+		await get_tree().process_frame
+
+		var player := get_tree().current_scene.get_node_or_null("Skerney")
+		if player and data.has("player_position"):
+			player.global_position = data["player_position"]
+
+	return data
+
+# ---------------------------------------------------------
+# SOLO LEE EL ARCHIVO, NO CAMBIA DE ESCENA
+# ---------------------------------------------------------
+func load_game_data(slot: int) -> Dictionary:
 	if slot_exists(slot):
 		var path := SLOT_PATH % slot + DATA_FILE
 		var file := FileAccess.open(path, FileAccess.READ)
 		var data: Dictionary = file.get_var()
 		file.close()
-		temp_data = data
 		return data
-
-	# Si no existe, usar el guardado temporal
-	return temp_data
+	return {} 
 
 
 # ---------------------------------------------------------
@@ -102,8 +115,9 @@ func load_thumbnail(slot: int) -> Texture2D:
 # ---------------------------------------------------------
 func capture_thumbnail() -> Image:
 	var img := get_viewport().get_texture().get_image()
-	img.resize(256, 144)
+	img.convert(Image.FORMAT_RGBA8) # Asegura compatibilidad
 	return img
+
 
 
 # ---------------------------------------------------------

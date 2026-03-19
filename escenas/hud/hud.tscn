@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://dm0352mkxet6c"]
+
+[ext_resource type="Script" uid="uid://cyrd87qbhfvqx" path="res://escenas/hud/hud.gd" id="1_e6xi8"]
+
+[node name="HUD" type="CanvasLayer" unique_id=132858156]
+script = ExtResource("1_e6xi8")
+
+[node name="MensajeGuardado" type="Label" parent="." unique_id=109638551]
+visible = false
+modulate = Color(1, 1, 1, 0)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2

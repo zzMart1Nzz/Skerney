@@ -28,14 +28,4 @@ func guardar_partida():
 
 
 func mostrar_mensaje_guardado():
-	var label := get_tree().current_scene.get_node("HUD/MensajeGuardado")
-	label.text = mensaje
-	label.visible = true
-
-	var tween := create_tween()
-	tween.tween_property(label, "modulate:a", 1.0, 0.2)
-	tween.tween_interval(1.0)
-	tween.tween_property(label, "modulate:a", 0.0, 0.4)
-	tween.finished.connect(func():
-		label.visible = false
-	)
+	HUD.mostrar_mensaje(mensaje)

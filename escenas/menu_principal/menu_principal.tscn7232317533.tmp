@@ -320,8 +320,7 @@ script = ExtResource("8_w4esp")
 
 [node name="Slot1" type="Button" parent="FondoOscuro/MenuSlots" unique_id=1115250631]
 texture_filter = 1
-clip_contents = true
-layout_mode = 1
+layout_mode = 0
 offset_top = 2.9520264
 offset_right = 769.0
 offset_bottom = 84.95203
@@ -336,10 +335,10 @@ script = ExtResource("8_w4esp")
 [node name="Miniatura" type="TextureRect" parent="FondoOscuro/MenuSlots/Slot1" unique_id=164645240]
 clip_contents = true
 layout_mode = 0
-offset_left = 7.3800297
-offset_top = 5.166054
-offset_right = 162.38004
-offset_bottom = 77.491035
+offset_left = 4.4280443
+offset_top = 3.6900406
+offset_right = 159.42804
+offset_bottom = 78.2288
 stretch_mode = 6
 
 [node name="Datos" type="VBoxContainer" parent="FondoOscuro/MenuSlots/Slot1" unique_id=1652844875]
@@ -364,7 +363,6 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="Slot2" type="Button" parent="FondoOscuro/MenuSlots" unique_id=714449131]
-clip_contents = true
 layout_mode = 0
 offset_top = 126.199
 offset_right = 769.0
@@ -379,10 +377,10 @@ script = ExtResource("8_w4esp")
 
 [node name="Miniatura" type="TextureRect" parent="FondoOscuro/MenuSlots/Slot2" unique_id=692768092]
 layout_mode = 0
-offset_left = 7.38
-offset_top = 4.428013
-offset_right = 162.38
-offset_bottom = 76.753006
+offset_left = 4.428047
+offset_top = 2.9520264
+offset_right = 159.42804
+offset_bottom = 77.49103
 
 [node name="Datos" type="VBoxContainer" parent="FondoOscuro/MenuSlots/Slot2" unique_id=278497076]
 custom_minimum_size = Vector2(50, 0)
@@ -406,7 +404,6 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="Slot3" type="Button" parent="FondoOscuro/MenuSlots" unique_id=297749856]
-clip_contents = true
 layout_mode = 0
 offset_top = 255.35103
 offset_right = 769.0
@@ -421,10 +418,10 @@ script = ExtResource("8_w4esp")
 
 [node name="Miniatura" type="TextureRect" parent="FondoOscuro/MenuSlots/Slot3" unique_id=1443177792]
 layout_mode = 0
-offset_left = 7.38
-offset_top = 4.428007
-offset_right = 162.38
-offset_bottom = 76.753006
+offset_left = 4.428051
+offset_top = 3.690033
+offset_right = 159.42805
+offset_bottom = 78.229034
 
 [node name="Datos" type="VBoxContainer" parent="FondoOscuro/MenuSlots/Slot3" unique_id=1976580869]
 layout_mode = 0
