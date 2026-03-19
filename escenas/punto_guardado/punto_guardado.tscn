@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://0kwwxy20d86v"]
+
+[ext_resource type="Script" uid="uid://dnyuaod6xugok" path="res://punto_guardado.gd" id="1_ur1ku"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xuvwt"]
+
+[node name="PuntoGuardado" type="Area2D" unique_id=2026634609]
+script = ExtResource("1_ur1ku")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1667879636]
+shape = SubResource("RectangleShape2D_xuvwt")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1087915642]

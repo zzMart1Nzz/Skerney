@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://bg7mbbr6mmnb6" path="res://escenas/Personajes/Skerney/skerney.tscn" id="2_qt0q4"]
 [ext_resource type="PackedScene" uid="uid://dfbqskeqtq0mu" path="res://escenas/door/door.tscn" id="3_qa2il"]
 [ext_resource type="PackedScene" uid="uid://carispjjrf7bw" path="res://escenas/fade_layer/FadeLayer.tscn" id="5_wkqe5"]
-[ext_resource type="AudioStream" uid="uid://jj2hudsqp5w8" path="res://assets/music/sfx/menu_sfx/dungeon_music.wav" id="6_ho3at"]
+[ext_resource type="AudioStream" uid="uid://jj2hudsqp5w8" path="res://assets/music/menu_music/dungeon_music.wav" id="6_ho3at"]
 
 [node name="LaCriptaDelOlvido" type="Node2D" unique_id=1057367277]
 script = ExtResource("1_nyts6")
