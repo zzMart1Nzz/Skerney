@@ -52,15 +52,31 @@ func _update_slots():
 
 		if ControladorPartida.slot_exists(i):
 			var data = ControladorPartida.load_game_data(i)
-			slot_node.get_node("Miniatura").texture = ControladorPartida.load_thumbnail(i)
+			var tex = ControladorPartida.load_thumbnail(i)
+
+			if tex:
+				var img := tex.get_image()
+
+				# Obtener tamaño del marco
+				var marco = slot_node.get_node("MarcoMiniatura")
+				var target_size: Vector2 = marco.size
+
+				# Redimensionar manteniendo calidad
+				img.resize(target_size.x, target_size.y, Image.INTERPOLATE_LANCZOS)
+
+				# Aplicar textura
+				slot_node.get_node("MarcoMiniatura/Miniatura").texture = ImageTexture.create_from_image(img)
+
 			slot_node.get_node("Datos/Fecha").text = data.get("timestamp", "Fecha desconocida")
 			slot_node.get_node("Datos/Tiempo").text = str(data.get("play_time", 0) / 60) + " min"
 			slot_node.get_node("Datos/Vidas").text = str(data.get("lives", 3))
 		else:
-			slot_node.get_node("Miniatura").texture = null
+			slot_node.get_node("MarcoMiniatura/Miniatura").texture = null
 			slot_node.get_node("Datos/Fecha").text = "Vacío"
 			slot_node.get_node("Datos/Tiempo").text = ""
 			slot_node.get_node("Datos/Vidas").text = ""
+
+
 
 
 

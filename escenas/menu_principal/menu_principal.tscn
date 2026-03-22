@@ -10,6 +10,7 @@
 [ext_resource type="StyleBox" uid="uid://cmo0amkjbue43" path="res://button_styles/hover.tres" id="6_otvbs"]
 [ext_resource type="Script" uid="uid://cwttcy11qsln0" path="res://scripts/boton_sonido/boton_sonido.gd" id="8_w4esp"]
 [ext_resource type="FontFile" uid="uid://bx2lmwn50h7le" path="res://assets/fonts/Peaberry-Font-v2.0/Peaberry-Font-v2.0/Peaberry Font Family/Peaberry Monospace/Peaberry-Mono.otf" id="9_w4esp"]
+[ext_resource type="StyleBox" uid="uid://d387a72v1a6op" path="res://themes/bordes_menu.tres" id="10_n1516"]
 [ext_resource type="AudioStream" uid="uid://hjg6a5ninvpv" path="res://assets/music/sfx/menu_sfx/rollover.wav" id="11_byxo4"]
 [ext_resource type="AudioStream" uid="uid://d05ltkx3y6qif" path="res://assets/music/sfx/menu_sfx/select.wav" id="12_n1516"]
 
@@ -333,13 +334,23 @@ theme_override_styles/pressed = ExtResource("5_7mlcq")
 theme_override_styles/hover = ExtResource("6_otvbs")
 script = ExtResource("8_w4esp")
 
-[node name="Miniatura" type="TextureRect" parent="FondoOscuro/MenuSlots/Slot1" unique_id=164645240]
+[node name="MarcoMiniatura" type="Panel" parent="FondoOscuro/MenuSlots/Slot1" unique_id=1238593691]
+z_index = 1
 clip_contents = true
 layout_mode = 0
-offset_left = 7.3800297
-offset_top = 5.166054
-offset_right = 162.38004
-offset_bottom = 77.491035
+offset_left = 7.0
+offset_top = 5.166
+offset_right = 167.0
+offset_bottom = 77.491
+theme_override_styles/panel = ExtResource("10_n1516")
+
+[node name="Miniatura" type="TextureRect" parent="FondoOscuro/MenuSlots/Slot1/MarcoMiniatura" unique_id=164645240]
+clip_contents = true
+layout_mode = 0
+offset_left = 2.55
+offset_top = 1.77
+offset_right = 157.36
+offset_bottom = 69.265
 stretch_mode = 6
 
 [node name="Datos" type="VBoxContainer" parent="FondoOscuro/MenuSlots/Slot1" unique_id=1652844875]
@@ -355,13 +366,19 @@ offset_bottom = 79.78599
 grow_horizontal = 0
 
 [node name="Fecha" type="Label" parent="FondoOscuro/MenuSlots/Slot1/Datos" unique_id=1545440311]
+texture_filter = 1
 layout_mode = 2
+theme_override_fonts/font = ExtResource("9_w4esp")
 
 [node name="Tiempo" type="Label" parent="FondoOscuro/MenuSlots/Slot1/Datos" unique_id=1495401861]
+texture_filter = 1
 layout_mode = 2
+theme_override_fonts/font = ExtResource("9_w4esp")
 
 [node name="Vidas" type="Label" parent="FondoOscuro/MenuSlots/Slot1/Datos" unique_id=196155754]
+texture_filter = 1
 layout_mode = 2
+theme_override_fonts/font = ExtResource("9_w4esp")
 
 [node name="Slot2" type="Button" parent="FondoOscuro/MenuSlots" unique_id=714449131]
 clip_contents = true
@@ -377,12 +394,21 @@ theme_override_styles/pressed = ExtResource("5_7mlcq")
 theme_override_styles/hover = ExtResource("6_otvbs")
 script = ExtResource("8_w4esp")
 
-[node name="Miniatura" type="TextureRect" parent="FondoOscuro/MenuSlots/Slot2" unique_id=692768092]
+[node name="MarcoMiniatura" type="Panel" parent="FondoOscuro/MenuSlots/Slot2" unique_id=575568205]
+z_index = 1
 layout_mode = 0
-offset_left = 7.38
-offset_top = 4.428013
-offset_right = 162.38
-offset_bottom = 76.753006
+offset_left = 7.0
+offset_top = 4.428
+offset_right = 167.0
+offset_bottom = 76.753
+theme_override_styles/panel = ExtResource("10_n1516")
+
+[node name="Miniatura" type="TextureRect" parent="FondoOscuro/MenuSlots/Slot2/MarcoMiniatura" unique_id=692768092]
+layout_mode = 0
+offset_left = 2.55
+offset_top = 1.77
+offset_right = 157.36
+offset_bottom = 69.265
 
 [node name="Datos" type="VBoxContainer" parent="FondoOscuro/MenuSlots/Slot2" unique_id=278497076]
 custom_minimum_size = Vector2(50, 0)
@@ -397,13 +423,19 @@ offset_bottom = 79.78598
 grow_horizontal = 0
 
 [node name="Fecha" type="Label" parent="FondoOscuro/MenuSlots/Slot2/Datos" unique_id=68208556]
+texture_filter = 1
 layout_mode = 2
+theme_override_fonts/font = ExtResource("9_w4esp")
 
 [node name="Tiempo" type="Label" parent="FondoOscuro/MenuSlots/Slot2/Datos" unique_id=1136715802]
+texture_filter = 1
 layout_mode = 2
+theme_override_fonts/font = ExtResource("9_w4esp")
 
 [node name="Vidas" type="Label" parent="FondoOscuro/MenuSlots/Slot2/Datos" unique_id=333510299]
+texture_filter = 1
 layout_mode = 2
+theme_override_fonts/font = ExtResource("9_w4esp")
 
 [node name="Slot3" type="Button" parent="FondoOscuro/MenuSlots" unique_id=297749856]
 clip_contents = true
@@ -419,12 +451,21 @@ theme_override_styles/pressed = ExtResource("5_7mlcq")
 theme_override_styles/hover = ExtResource("6_otvbs")
 script = ExtResource("8_w4esp")
 
-[node name="Miniatura" type="TextureRect" parent="FondoOscuro/MenuSlots/Slot3" unique_id=1443177792]
+[node name="MarcoMiniatura" type="Panel" parent="FondoOscuro/MenuSlots/Slot3" unique_id=1422317013]
+z_index = 1
 layout_mode = 0
-offset_left = 7.38
-offset_top = 4.428007
-offset_right = 162.38
-offset_bottom = 76.753006
+offset_left = 7.0
+offset_top = 4.428
+offset_right = 167.0
+offset_bottom = 76.753
+theme_override_styles/panel = ExtResource("10_n1516")
+
+[node name="Miniatura" type="TextureRect" parent="FondoOscuro/MenuSlots/Slot3/MarcoMiniatura" unique_id=1443177792]
+layout_mode = 0
+offset_left = 2.55
+offset_top = 1.77
+offset_right = 157.36
+offset_bottom = 69.265
 
 [node name="Datos" type="VBoxContainer" parent="FondoOscuro/MenuSlots/Slot3" unique_id=1976580869]
 layout_mode = 0
@@ -434,13 +475,19 @@ offset_right = 765.0
 offset_bottom = 79.78598
 
 [node name="Fecha" type="Label" parent="FondoOscuro/MenuSlots/Slot3/Datos" unique_id=1723767791]
+texture_filter = 1
 layout_mode = 2
+theme_override_fonts/font = ExtResource("9_w4esp")
 
 [node name="Tiempo" type="Label" parent="FondoOscuro/MenuSlots/Slot3/Datos" unique_id=2049239986]
+texture_filter = 1
 layout_mode = 2
+theme_override_fonts/font = ExtResource("9_w4esp")
 
 [node name="Vidas" type="Label" parent="FondoOscuro/MenuSlots/Slot3/Datos" unique_id=645079363]
+texture_filter = 1
 layout_mode = 2
+theme_override_fonts/font = ExtResource("9_w4esp")
 
 [node name="Musica" type="AudioStreamPlayer2D" parent="." unique_id=929469148]
 stream = ExtResource("2_jylg6")
