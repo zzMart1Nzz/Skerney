@@ -19,7 +19,8 @@ func guardar_partida():
 		"level": get_tree().current_scene.scene_file_path,
 		"player_position": player.global_position,
 		"timestamp": Time.get_datetime_string_from_system(),
-		"play_time": 0,
+		"play_time": ControladorPartida.temp_data.get("play_time", 0),
+		"opened_doors": ControladorPartida.temp_data.get("opened_doors", {}),
 		"lives": 3
 	}
 

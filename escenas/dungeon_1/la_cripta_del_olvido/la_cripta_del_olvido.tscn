@@ -55,12 +55,16 @@ tile_set = ExtResource("1_qj4uc")
 [node name="Chest" parent="." unique_id=1376242456 instance=ExtResource("2_783ew")]
 modulate = Color(0.34509805, 0.5882353, 0.6392157, 1)
 position = Vector2(-66, -49)
+key_id = "llave_cripta"
 
 [node name="Door" parent="." unique_id=1626325775 instance=ExtResource("3_qa2il")]
 modulate = Color(0.34509805, 0.5882353, 0.6392157, 1)
 z_index = 1
 position = Vector2(8, -76.5)
 scale = Vector2(0.125, 0.125)
+next_scene = "res://escenas/el_pasillo_de_las_memorias/el_pasillo_de_las_memorias.tscn"
+required_key = "llave_cripta"
+door_id = "puerta_cripta"
 
 [node name="AltarDelOlvido" parent="." unique_id=1269711587 instance=ExtResource("8_qs7k6")]
 z_index = 3

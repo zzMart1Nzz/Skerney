@@ -6,13 +6,15 @@ extends CharacterBody2D
 
 var input_vector := Vector2.ZERO
 var last_direction := "down"
-var has_key := false
+
+# 🔥 NUEVO SISTEMA DE INVENTARIO DE LLAVES
+var keys := {}   # Ej: keys["llave_cripta"] = true
+
 var interactable: Node = null
-var can_move := true   # ← ya lo tienes, perfecto
+var can_move := true
 
 
 func _physics_process(delta):
-	# Si no puede moverse (cutscene), no leer input del jugador
 	if not can_move:
 		velocity = Vector2.ZERO
 		move_and_slide()
@@ -78,18 +80,19 @@ func _update_interaction_detector():
 	$InteractionDetector.position = offset
 
 
+# 🔥 YA NO USAMOS has_key
+# ESTE MÉTODO YA NO ES NECESARIO, PERO LO DEJO POR SI LO USAS EN ALGÚN SITIO
 func _on_chest_key_obtained():
-	has_key = true
-	print("Has obtenido una llave.")
+	print("Has obtenido una llave (usa keys[] ahora).")
 
 
 func _on_InteractionDetector_area_entered(area):
 	if area.has_method("interact"):
 		interactable = area
-		print("Detectado interactuable: ", area.name)
+		print("Detectado interactuable:", area.name)
 
 
 func _on_InteractionDetector_area_exited(area):
 	if interactable == area:
 		interactable = null
-		print("Interactuable salido: ", area.name)
+		print("Interactuable salido:", area.name)

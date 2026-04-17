@@ -3,6 +3,7 @@ extends Control
 var modo_slots := ""  # "new" o "load"
 
 func _ready():
+
 	$VBoxContainer/CargarPartida.visible = ControladorPartida.has_any_save()
 
 	$OpcionesVentana.visible = false

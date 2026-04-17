@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://dm0352mkxet6c"]
 
 [ext_resource type="Script" uid="uid://cyrd87qbhfvqx" path="res://escenas/hud/hud.gd" id="1_e6xi8"]
+[ext_resource type="FontFile" uid="uid://bx2lmwn50h7le" path="res://assets/fonts/Peaberry-Font-v2.0/Peaberry-Font-v2.0/Peaberry Font Family/Peaberry Monospace/Peaberry-Mono.otf" id="2_xwi0g"]
 
 [node name="HUD" type="CanvasLayer" unique_id=132858156]
 script = ExtResource("1_e6xi8")
@@ -13,3 +14,4 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_fonts/font = ExtResource("2_xwi0g")

@@ -6,7 +6,7 @@
 [ext_resource type="Script" uid="uid://b6ojhaapabfrp" path="res://escenas/Personajes/Skerney/states/Idle.gd" id="5_fp8k8"]
 [ext_resource type="Script" uid="uid://cbqvxo2tljku8" path="res://escenas/Personajes/Skerney/states/Walk.gd" id="6_fp8k8"]
 [ext_resource type="Script" uid="uid://dvn762r8oc8p7" path="res://escenas/Personajes/Skerney/states/Attack.gd" id="6_ioach"]
-[ext_resource type="AudioStream" uid="uid://qrqfdu310da" path="res://assets/music/sfx/game_sfx/sword_swing.wav" id="7_ioach"]
+[ext_resource type="AudioStream" uid="uid://ctooynhyi0ebg" path="res://assets/music/sfx/game_sfx/sword_swing.wav" id="7_ioach"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_t7uvj"]
 size = Vector2(35, 25.899282)

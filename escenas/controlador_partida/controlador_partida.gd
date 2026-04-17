@@ -11,6 +11,13 @@ var temp_data: Dictionary = {}   # Guardado temporal en RAM
 
 func _ready():
 	ensure_save_folder()
+	set_process(true)  # 🔥 Necesario para acumular tiempo de juego
+
+
+func _process(delta):
+	# 🔥 Acumular tiempo de juego
+	if temp_data.has("play_time"):
+		temp_data["play_time"] += delta
 
 
 # ---------------------------------------------------------
@@ -74,6 +81,14 @@ func load_game(slot: int):
 	var data := load_game_data(slot)
 	temp_data = data
 
+	# 🔥 Asegurar estructuras
+	if not temp_data.has("opened_doors"):
+		temp_data["opened_doors"] = {}
+	if not temp_data.has("keys"):
+		temp_data["keys"] = {}
+	if not temp_data.has("play_time"):
+		temp_data["play_time"] = 0
+
 	if data.has("level"):
 		get_tree().change_scene_to_file(data["level"])
 		await get_tree().process_frame
@@ -83,6 +98,7 @@ func load_game(slot: int):
 			player.global_position = data["player_position"]
 
 	return data
+
 
 # ---------------------------------------------------------
 # SOLO LEE EL ARCHIVO, NO CAMBIA DE ESCENA
@@ -115,13 +131,12 @@ func load_thumbnail(slot: int) -> Texture2D:
 # ---------------------------------------------------------
 func capture_thumbnail() -> Image:
 	var img := get_viewport().get_texture().get_image()
-	img.convert(Image.FORMAT_RGBA8) # Asegura compatibilidad
+	img.convert(Image.FORMAT_RGBA8)
 	return img
 
 
-
 # ---------------------------------------------------------
-#   INICIAR NUEVA PARTIDA (GUARDADO TEMPORAL)
+#   INICIAR NUEVA PARTIDA
 # ---------------------------------------------------------
 func new_game(slot: int):
 	current_slot = slot
@@ -131,7 +146,9 @@ func new_game(slot: int):
 		"player_position": Vector2(0, 0),
 		"timestamp": Time.get_datetime_string_from_system(),
 		"play_time": 0,
-		"lives": 3
+		"lives": 3,
+		"opened_doors": {},   # 🔥 Añadido
+		"keys": {}            # 🔥 Añadido
 	}
 
 	get_tree().change_scene_to_file(temp_data["level"])
