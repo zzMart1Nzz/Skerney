@@ -24,7 +24,7 @@ audio_attack = NodePath("AudioAttack")
 z_index = 3
 scale = Vector2(0.585, 0.585)
 sprite_frames = ExtResource("1_ujqax")
-animation = &"idle_down"
+animation = &"idle_left"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=582105576]
 z_index = 3
