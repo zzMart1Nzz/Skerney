@@ -15,3 +15,64 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_fonts/font = ExtResource("2_xwi0g")
+
+[node name="DeathMenu" type="Control" parent="." unique_id=1221456141]
+visible = false
+z_index = 50
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Dim" type="ColorRect" parent="DeathMenu" unique_id=617938235]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.65)
+
+[node name="Panel" type="Panel" parent="DeathMenu" unique_id=1938664935]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -220.0
+offset_top = -120.0
+offset_right = 220.0
+offset_bottom = 120.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="DeathMenu/Panel" unique_id=1229708861]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 18.0
+offset_right = -20.0
+offset_bottom = -18.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="DeathMenu/Panel/VBoxContainer" unique_id=1858933824]
+theme_override_fonts/font = ExtResource("2_xwi0g")
+theme_override_font_sizes/font_size = 42
+text = "Has muerto"
+horizontal_alignment = 1
+
+[node name="RetryButton" type="Button" parent="DeathMenu/Panel/VBoxContainer" unique_id=1176855250]
+theme_override_fonts/font = ExtResource("2_xwi0g")
+theme_override_font_sizes/font_size = 28
+text = "Volver al guardado"
+
+[node name="MenuButton" type="Button" parent="DeathMenu/Panel/VBoxContainer" unique_id=1768025014]
+theme_override_fonts/font = ExtResource("2_xwi0g")
+theme_override_font_sizes/font_size = 28
+text = "Salir al menú"
+
+[connection signal="pressed" from="DeathMenu/Panel/VBoxContainer/RetryButton" to="." method="_on_retry_button_pressed"]
+[connection signal="pressed" from="DeathMenu/Panel/VBoxContainer/MenuButton" to="." method="_on_menu_button_pressed"]

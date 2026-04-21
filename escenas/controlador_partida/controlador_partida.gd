@@ -11,11 +11,25 @@ var temp_data: Dictionary = {}   # Guardado temporal en RAM
 
 func _ready():
 	ensure_save_folder()
-	set_process(true)  # 🔥 Necesario para acumular tiempo de juego
+	set_process(true)
+
+	# 🔥 Asegurar estructuras persistentes
+	if not temp_data.has("opened_doors"):
+		temp_data["opened_doors"] = {}
+
+	if not temp_data.has("keys"):
+		temp_data["keys"] = {}
+
+	if not temp_data.has("opened_chests"):
+		temp_data["opened_chests"] = {}   # 🔥 IMPORTANTE
+
+	if not temp_data.has("play_time"):
+		temp_data["play_time"] = 0
+
+
 
 
 func _process(delta):
-	# 🔥 Acumular tiempo de juego
 	if temp_data.has("play_time"):
 		temp_data["play_time"] += delta
 
@@ -88,6 +102,8 @@ func load_game(slot: int):
 		temp_data["keys"] = {}
 	if not temp_data.has("play_time"):
 		temp_data["play_time"] = 0
+	if not temp_data.has("opened_chests"):
+		temp_data["opened_chests"] = {}
 
 	if data.has("level"):
 		get_tree().change_scene_to_file(data["level"])
@@ -142,14 +158,16 @@ func new_game(slot: int):
 	current_slot = slot
 
 	temp_data = {
-		"level": "res://escenas/dungeon_1/la_cripta_del_olvido/la_cripta_del_olvido.tscn",
-		"player_position": Vector2(0, 0),
-		"timestamp": Time.get_datetime_string_from_system(),
-		"play_time": 0,
-		"lives": 3,
-		"opened_doors": {},   # 🔥 Añadido
-		"keys": {}            # 🔥 Añadido
+	"level": "res://escenas/dungeon_1/la_cripta_del_olvido/la_cripta_del_olvido.tscn",
+	"player_position": Vector2(0, 0),
+	"timestamp": Time.get_datetime_string_from_system(),
+	"play_time": 0,
+	"lives": 3,
+	"opened_doors": {},
+	"keys": {},
+	"opened_chests": {}   
 	}
+
 
 	get_tree().change_scene_to_file(temp_data["level"])
 

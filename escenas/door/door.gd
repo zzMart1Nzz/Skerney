@@ -2,36 +2,120 @@ extends Area2D
 
 @export var next_scene: String
 @export var required_key: String = ""
-@export var door_id: String = ""   
+@export var door_id: String = ""
+@export var target_door_id: String = ""
 @export var starts_open: bool = false
-@export var entry_offset: Vector2 = Vector2(0, -10)
 
-@onready var sprite := $Sprite2D
-@onready var collision := $CollisionShape2D
-@onready var solid_collision := $StaticBody2D/CollisionShape2D
+@export var door_edge_offset: float = 8.0
+@export var enter_distance: float = 16.0
+@export var enter_duration: float = 0.9
+@export var exit_distance: float = 24.0
+@export var exit_duration: float = 1.0
 
-var opened := false
+@onready var sprite: Sprite2D = $Sprite2D
+@onready var collision: CollisionShape2D = $CollisionShape2D
+@onready var solid_collision: CollisionShape2D = $StaticBody2D/CollisionShape2D
+@onready var entry_detector: Area2D = $EntryDetector
+@onready var spawn_point: Marker2D = $SpawnPoint
+
+var opened: bool = false
+var recently_loaded: bool = false
+var is_transitioning: bool = false
 
 
 func _ready():
-	# Si debe empezar abierta, la abrimos y salimos
-	if starts_open:
-		open_door()
-		return
+	# Asegurar que este nodo está en el grupo Door
+	add_to_group("Door")
 
-	# Si ya estaba abierta en la partida, restauramos estado
+	if door_id == "":
+		door_id = name
+
+	# Evitar activación inmediata al cargar
+	recently_loaded = true
+
+	# Restaurar estado abierto si procede
 	if ControladorPartida.temp_data.has("opened_doors"):
 		if ControladorPartida.temp_data["opened_doors"].get(door_id, false):
 			open_door()
+	if starts_open and not opened:
+		open_door()
+
+	# Si venimos por esta puerta, colocar al jugador en el SpawnPoint
+	var last_id: String = ControladorPartida.temp_data.get("last_door_id", "")
+	var did_exit := false
+	if last_id == door_id:
+		if is_instance_valid(spawn_point):
+			var tries := 0
+			var skerney = get_tree().get_first_node_in_group("Skerney")
+			while skerney == null and tries < 10:
+				tries += 1
+				await get_tree().process_frame
+				skerney = get_tree().get_first_node_in_group("Skerney")
+			if skerney:
+				if not (skerney as Node).is_node_ready():
+					await (skerney as Node).ready
+				did_exit = true
+				var last_dir: String = ControladorPartida.temp_data.get("last_door_entry", "from_up")
+				var dir_vector := Vector2.ZERO
+				if last_dir == "from_up":
+					dir_vector = Vector2(0, 1)
+					skerney.last_direction = "down"
+				elif last_dir == "from_down":
+					dir_vector = Vector2(0, -1)
+					skerney.last_direction = "up"
+				else:
+					dir_vector = Vector2(0, 1)
+					skerney.last_direction = "down"
+				_try_play_walk_anim(skerney, last_dir)
+
+				# Evitar reactivación inmediata del detector
+				entry_detector.set_deferred("monitoring", false)
+				skerney.can_move = false
+				skerney.input_vector = dir_vector
+				skerney.velocity = Vector2.ZERO
+
+				var start_pos: Vector2 = spawn_point.global_position - dir_vector * door_edge_offset
+				skerney.global_position = start_pos
+
+				var tween := create_tween()
+				tween.tween_property(skerney, "global_position", start_pos + dir_vector * exit_distance, exit_duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+				await tween.finished
+
+				skerney.can_move = true
+				skerney.input_vector = Vector2.ZERO
+				skerney.velocity = Vector2.ZERO
+
+				ControladorPartida.temp_data.erase("last_door_entry")
+				ControladorPartida.temp_data.erase("last_door_id")
+
+				await get_tree().create_timer(0.10).timeout
+				entry_detector.set_deferred("monitoring", true)
+	if did_exit:
+		await get_tree().create_timer(0.20).timeout
+		recently_loaded = false
+	else:
+		await get_tree().create_timer(0.18).timeout
+		recently_loaded = false
+
+
+func _try_play_walk_anim(skerney: Node, entry_direction: String) -> void:
+	if not skerney.has_method("get"):
+		return
+	var anim_node = skerney.get("anim")
+	if not (anim_node is AnimatedSprite2D):
+		return
+	var anim := anim_node as AnimatedSprite2D
+	if anim.sprite_frames == null:
+		return
+	var anim_name := "walk_down" if entry_direction == "from_up" else "walk_up"
+	if anim.sprite_frames.has_animation(anim_name):
+		anim.play(anim_name)
 
 
 func interact():
 	if opened:
 		return
-
 	var skerney = get_tree().get_first_node_in_group("Skerney")
-
-	# Si no requiere llave, se abre igual
 	if required_key == "" or (skerney and skerney.keys.get(required_key, false)):
 		open_door()
 	else:
@@ -43,31 +127,96 @@ func open_door():
 	sprite.frame = 1
 	collision.disabled = true
 	solid_collision.disabled = true
-
-	if ControladorPartida.temp_data.has("opened_doors"):
-		ControladorPartida.temp_data["opened_doors"][door_id] = true
-
-	print("Puerta abierta. Ahora debes avanzar para entrar.")
+	if not ControladorPartida.temp_data.has("opened_doors"):
+		ControladorPartida.temp_data["opened_doors"] = {}
+	ControladorPartida.temp_data["opened_doors"][door_id] = true
 
 
+# Determina si el jugador entró desde arriba o desde abajo
+func get_entry_direction(skerney: Node2D) -> String:
+	if is_instance_valid(spawn_point):
+		if skerney.global_position.y < spawn_point.global_position.y:
+			return "from_up"
+		if skerney.global_position.y > spawn_point.global_position.y:
+			return "from_down"
+	var iv = null
+	if skerney.has_method("get"):
+		iv = skerney.get("input_vector")
+	if typeof(iv) == TYPE_VECTOR2:
+		if iv.y < 0.0:
+			return "from_down"
+		if iv.y > 0.0:
+			return "from_up"
+	return "from_up"
+
+
+# Inicio de la secuencia de entrada por la puerta
 func start_cutscene(skerney):
+	if is_transitioning:
+		return
+	is_transitioning = true
+
+	# Guardar datos para la escena destino
+	var direction: String = get_entry_direction(skerney)
+	ControladorPartida.temp_data["last_door_entry"] = direction
+	ControladorPartida.temp_data["last_door_id"] = target_door_id if target_door_id != "" else door_id
+
+	# Bloquear control del jugador
 	skerney.can_move = false
 
-	var sm = skerney.get_node_or_null("StateMachine")
-	if sm:
-		sm.change_state("walk")
+	# Desactivar detector de forma segura
+	entry_detector.set_deferred("monitoring", false)
 
+	# Forzar la dirección de animación (solo animación)
+	if direction == "from_up":
+		skerney.input_vector = Vector2(0, 1)
+		skerney.last_direction = "down"
+	else:
+		skerney.input_vector = Vector2(0, -1)
+		skerney.last_direction = "up"
+	_try_play_walk_anim(skerney, direction)
+
+	# Colocar al jugador justo en el borde de la puerta
+	var start_pos: Vector2 = spawn_point.global_position - skerney.input_vector * door_edge_offset
+	skerney.global_position = start_pos
+
+	# Tween lento hacia dentro (visualmente claro)
+	var move_inside: Vector2 = skerney.input_vector * enter_distance
 	var tween := create_tween()
-	tween.tween_property(skerney, "position", skerney.position + entry_offset, 1.0)
+	tween.tween_property(skerney, "global_position", start_pos + move_inside, enter_duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	await tween.finished
 
+	# Fade y cambio de escena
+	var player_ref = skerney
 	FadeLayer.fade_out_and_call(func():
 		if next_scene == "":
 			get_tree().reload_current_scene()
 		else:
-			get_tree().change_scene_to_file(next_scene)
+			if not ResourceLoader.exists(next_scene):
+				is_transitioning = false
+				entry_detector.set_deferred("monitoring", true)
+				if is_instance_valid(player_ref):
+					player_ref.can_move = true
+				push_error("Door next_scene no existe: " + next_scene)
+				return
+			var err := get_tree().change_scene_to_file(next_scene)
+			if err != OK:
+				is_transitioning = false
+				entry_detector.set_deferred("monitoring", true)
+				if is_instance_valid(player_ref):
+					player_ref.can_move = true
+				push_error("Error al cambiar de escena: " + next_scene + " (" + str(err) + ")")
 	)
+
+	# limpieza por seguridad
+	skerney.input_vector = Vector2.ZERO
+	skerney.velocity = Vector2.ZERO
 
 
 func _on_EntryDetector_body_entered(body):
+	if recently_loaded:
+		return
+	if is_transitioning:
+		return
 	if opened and body.is_in_group("Skerney"):
 		start_cutscene(body)

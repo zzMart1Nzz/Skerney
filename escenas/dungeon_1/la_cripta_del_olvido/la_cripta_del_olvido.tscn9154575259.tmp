@@ -66,11 +66,7 @@ position = Vector2(8, -76.5)
 scale = Vector2(0.125, 0.125)
 next_scene = "res://escenas/el_pasillo_de_las_memorias/el_pasillo_de_las_memorias.tscn"
 required_key = "llave_pasillo"
-door_id = "cripta_to_pasillo"
-target_door_id = "pasillo_to_cripta"
-door_edge_offset = 6.0
-enter_distance = 10.0
-enter_duration = 0.5
+door_id = "puerta_cripta"
 
 [node name="Skerney" parent="." unique_id=2015512818 instance=ExtResource("2_qt0q4")]
 modulate = Color(0.34509805, 0.5882353, 0.6392157, 1)

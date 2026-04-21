@@ -21,6 +21,7 @@ func guardar_partida():
 		"timestamp": Time.get_datetime_string_from_system(),
 		"play_time": ControladorPartida.temp_data.get("play_time", 0),
 		"opened_doors": ControladorPartida.temp_data.get("opened_doors", {}),
+		"opened_chests": ControladorPartida.temp_data["opened_chests"],
 		"lives": 3
 	}
 
