@@ -12,6 +12,15 @@ extends Area2D
 @export var exit_distance: float = 24.0
 @export var exit_duration: float = 1.0
 
+@export var puzzle_id: String = ""
+@export var puzzle_is_correct: bool = false
+@export var puzzle_fail_color: Color = Color(1.0, 0.25, 0.25, 1.0)
+@export var puzzle_choice_key: String = ""
+@export var puzzle_correct_stage: int = -1
+@export var puzzle_total_stages: int = 3
+@export var puzzle_loop_exit_door_id: String = "puzzle_to_pasillo"
+@export var puzzle_loop_exit_entry_direction: String = "from_down"
+
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var collision: CollisionShape2D = $CollisionShape2D
 @onready var solid_collision: CollisionShape2D = $StaticBody2D/CollisionShape2D
@@ -39,6 +48,12 @@ func _ready():
 			open_door()
 	if starts_open and not opened:
 		open_door()
+	if puzzle_id != "" and not opened:
+		open_door()
+	if puzzle_id != "":
+		sprite.modulate = Color(1, 1, 1, 1)
+	if not opened and sprite != null:
+		sprite.frame = 0
 
 	# Si venimos por esta puerta, colocar al jugador en el SpawnPoint
 	var last_id: String = ControladorPartida.temp_data.get("last_door_id", "")
@@ -87,6 +102,7 @@ func _ready():
 
 				ControladorPartida.temp_data.erase("last_door_entry")
 				ControladorPartida.temp_data.erase("last_door_id")
+				ControladorPartida.temp_data.erase("puzzle_looping")
 
 				await get_tree().create_timer(0.10).timeout
 				entry_detector.set_deferred("monitoring", true)
@@ -156,6 +172,16 @@ func start_cutscene(skerney):
 		return
 	is_transitioning = true
 
+	if puzzle_id != "":
+		var stage_key = "puzzle_stage_" + puzzle_id
+		var stage = int(ControladorPartida.temp_data.get(stage_key, 0))
+		if stage >= puzzle_total_stages:
+			is_transitioning = false
+			return
+		await _play_puzzle_enter(skerney)
+		_run_puzzle_choice_after_enter(stage_key, stage)
+		return
+
 	# Guardar datos para la escena destino
 	var direction: String = get_entry_direction(skerney)
 	ControladorPartida.temp_data["last_door_entry"] = direction
@@ -211,6 +237,50 @@ func start_cutscene(skerney):
 	# limpieza por seguridad
 	skerney.input_vector = Vector2.ZERO
 	skerney.velocity = Vector2.ZERO
+
+
+func _play_puzzle_enter(skerney: Node) -> void:
+	var direction: String = get_entry_direction(skerney)
+	skerney.can_move = false
+	entry_detector.set_deferred("monitoring", false)
+	if direction == "from_up":
+		skerney.input_vector = Vector2(0, 1)
+		skerney.last_direction = "down"
+	else:
+		skerney.input_vector = Vector2(0, -1)
+		skerney.last_direction = "up"
+	_try_play_walk_anim(skerney, direction)
+
+	var start_pos: Vector2 = spawn_point.global_position - skerney.input_vector * door_edge_offset
+	skerney.global_position = start_pos
+
+	var move_inside: Vector2 = skerney.input_vector * enter_distance
+	var tween := create_tween()
+	tween.tween_property(skerney, "global_position", start_pos + move_inside, enter_duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	await tween.finished
+
+	skerney.input_vector = Vector2.ZERO
+	skerney.velocity = Vector2.ZERO
+
+
+func _run_puzzle_choice_after_enter(stage_key: String, stage: int) -> void:
+	var is_correct := false
+	if puzzle_correct_stage >= 0:
+		is_correct = puzzle_correct_stage == stage
+	else:
+		is_correct = puzzle_is_correct
+
+	if is_correct:
+		ControladorPartida.temp_data[stage_key] = stage + 1
+	else:
+		ControladorPartida.temp_data[stage_key] = 0
+
+	FadeLayer.fade_out_and_call(func():
+		ControladorPartida.temp_data["puzzle_looping"] = true
+		ControladorPartida.temp_data["last_door_id"] = puzzle_loop_exit_door_id
+		ControladorPartida.temp_data["last_door_entry"] = puzzle_loop_exit_entry_direction
+		get_tree().reload_current_scene()
+	)
 
 
 func _on_EntryDetector_body_entered(body):

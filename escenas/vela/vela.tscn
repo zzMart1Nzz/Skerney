@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://cfdq8xwfycggc"]
+
+[ext_resource type="Texture2D" uid="uid://wskwtmgke25q" path="res://assets/images/tileset/cave.png" id="1_dulgy"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r5k10"]
+atlas = ExtResource("1_dulgy")
+region = Rect2(0, 88, 16, 17)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_d8ce8"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r5k10")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_t2jkp"]
+
+[node name="Vela" type="Area2D" unique_id=38100873]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=2119673351]
+sprite_frames = SubResource("SpriteFrames_d8ce8")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1542364801]
+shape = SubResource("RectangleShape2D_t2jkp")

@@ -16,6 +16,41 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_fonts/font = ExtResource("2_xwi0g")
 
+[node name="QuoteOverlay" type="Control" parent="." unique_id=1803886658]
+visible = false
+z_index = 40
+modulate = Color(1, 1, 1, 0)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Dim" type="ColorRect" parent="QuoteOverlay" unique_id=1803886659]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.35)
+
+[node name="QuoteLabel" type="Label" parent="QuoteOverlay" unique_id=1803886660]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 70.0
+offset_top = 80.0
+offset_right = -70.0
+offset_bottom = -80.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("2_xwi0g")
+theme_override_font_sizes/font_size = 34
+autowrap_mode = 3
+text = ""
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="DeathMenu" type="Control" parent="." unique_id=1221456141]
 visible = false
 z_index = 50
