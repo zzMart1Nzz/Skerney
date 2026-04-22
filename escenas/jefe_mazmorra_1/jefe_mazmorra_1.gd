@@ -18,7 +18,8 @@ class Projectile extends Area2D:
 		if frames.size() > 0:
 			var sprite := AnimatedSprite2D.new()
 			var sf := SpriteFrames.new()
-			sf.add_animation("default")
+			if not sf.has_animation("default"):
+				sf.add_animation("default")
 			sf.set_animation_speed("default", frames_fps)
 			sf.set_animation_loop("default", true)
 			for t in frames:
@@ -432,12 +433,12 @@ func _anim_play_walk() -> void:
 	if anim.sprite_frames.has_animation("walk_left"):
 		anim.play("walk_left")
 
-func _play_anim_no_loop(name: String) -> void:
+func _play_anim_no_loop(anim_name: String) -> void:
 	if anim == null or anim.sprite_frames == null:
 		return
-	if anim.sprite_frames.has_animation(name):
-		anim.sprite_frames.set_animation_loop(name, false)
-		anim.play(name)
+	if anim.sprite_frames.has_animation(anim_name):
+		anim.sprite_frames.set_animation_loop(anim_name, false)
+		anim.play(anim_name)
 
 func _anim_seconds(anim_name: String) -> float:
 	if anim == null or anim.sprite_frames == null:
@@ -453,11 +454,11 @@ func _anim_seconds(anim_name: String) -> float:
 	return float(frames - 1) / fps
 
 
-func _play_anim(name: String) -> void:
+func _play_anim(anim_name: String) -> void:
 	if anim == null or anim.sprite_frames == null:
 		return
-	if anim.sprite_frames.has_animation(name):
-		anim.play(name)
+	if anim.sprite_frames.has_animation(anim_name):
+		anim.play(anim_name)
 
 
 func _fire_volley() -> void:

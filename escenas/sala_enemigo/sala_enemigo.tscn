@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://dfbqskeqtq0mu" path="res://escenas/door/door.tscn" id="3_45xij"]
 [ext_resource type="PackedScene" uid="uid://l6uvh0kbrsjq" path="res://escenas/slime/slime.tscn" id="3_ap83h"]
 [ext_resource type="PackedScene" uid="uid://mw2i7ch6yucu" path="res://escenas/chest/chest.tscn" id="5_ap83h"]
+[ext_resource type="AudioStream" uid="uid://cwm0ad22k7fwr" path="res://assets/music/menu_music/combate.wav" id="6_63mjx"]
 
 [node name="SalaEnemigo" type="Node2D" unique_id=1518308299]
 
@@ -83,3 +84,9 @@ position = Vector2(6, -65)
 key_id = "llave_puzzle"
 chest_id = "cofre_enemiga"
 key_display_name = "Llave de la sala del puzzle"
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." unique_id=1960254605]
+stream = ExtResource("6_63mjx")
+volume_db = -2.0
+autoplay = true
+bus = &"Music"
