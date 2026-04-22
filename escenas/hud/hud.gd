@@ -4,6 +4,9 @@ extends CanvasLayer
 @onready var quote_overlay := $QuoteOverlay
 @onready var quote_label := $QuoteOverlay/QuoteLabel
 @onready var danger_overlay := $DangerOverlay
+@onready var cinematic := $Cinematic
+@onready var cinematic_image := $Cinematic/Image
+@onready var cinematic_text := $Cinematic/Text
 @onready var death_menu := $DeathMenu
 @onready var btn_retry := $DeathMenu/Panel/VBoxContainer/RetryButton
 @onready var btn_menu := $DeathMenu/Panel/VBoxContainer/MenuButton
@@ -11,6 +14,7 @@ extends CanvasLayer
 var _death_menu_open := false
 var _quote_tween: Tween = null
 var _danger_tween: Tween = null
+var _cinematic_running := false
 
 func _ready() -> void:
 	var tree := get_tree()
@@ -116,6 +120,84 @@ func mostrar_texto_final(texto: String, hold_seconds: float = 1.6, fade_in_secon
 
 	quote_overlay.visible = false
 	_quote_tween = null
+
+
+func reproducir_cinematica_intro() -> void:
+	if _cinematic_running:
+		return
+	_cinematic_running = true
+	if cinematic == null or cinematic_image == null or cinematic_text == null:
+		_cinematic_running = false
+		return
+
+	var slides := [
+		{"path": "res://assets/images/cinematica/Cinematica1.png", "text": "Hace mucho tiempo, dos reinos entraron en guerra. El cielo ardía y la tierra temblaba bajo el choque de ejércitos."},
+		{"path": "res://assets/images/cinematica/Cinematica2.png", "text": "El reino malvado tenía a su guerrero más temido: una sombra en armadura negra, portador de un mandoble maldito."},
+		{"path": "res://assets/images/cinematica/Cinematica3.png", "text": "El reino defensor alzó a su héroe. Con determinación, juró frenar la masacre y proteger lo que quedaba."},
+		{"path": "res://assets/images/cinematica/Cinematica4.png", "text": "La batalla se volvió un caos interminable. Entre fuego y ceniza, ambos rivales se buscaron en medio del campo."},
+		{"path": "res://assets/images/cinematica/Cinematica5.png", "text": "Cuando al fin se encontraron, el acero chocó con furia. El guerrero oscuro llevaba la ventaja y el héroe retrocedía."},
+		{"path": "res://assets/images/cinematica/Cinematica6.png", "text": "Sin otra salida, el héroe invocó un hechizo prohibido. Su sacrificio derrotó al guerrero… pero el mundo pagó el precio."},
+		{"path": "res://assets/images/cinematica/Cinematica7.png", "text": "La luz se apagó. El sol desapareció. Una noche eterna cayó sobre la tierra, y la oscuridad se volvió hogar de monstruos."},
+		{"path": "res://assets/images/cinematica/Cinematica8.png", "text": "Criaturas hambrientas surgieron de la sombra. Durante décadas, el mundo se volvió hostil e implacable."},
+		{"path": "res://assets/images/cinematica/Cinematica9.png", "text": "Pero en lo profundo de una mazmorra, una pequeña alma azul despertó… guiada por una voz que nadie podía ver."},
+		{"path": "res://assets/images/cinematica/Cinematica10.png", "text": "Esa luz encontró un cuerpo olvidado: un esqueleto, una espada… y un destino. La aventura comienza ahora."}
+	]
+
+	cinematic.visible = true
+	cinematic.modulate.a = 0.0
+	cinematic_text.text = ""
+	cinematic_image.texture = null
+	await _cinematic_fade_to(1.0, 0.6)
+
+	for s in slides:
+		await _cinematic_fade_to(0.0, 0.35)
+		var tex := _load_cinematic_texture(s.get("path", ""))
+		cinematic_image.texture = tex
+		cinematic_text.text = str(s.get("text", ""))
+		await _cinematic_fade_to(1.0, 0.35)
+		await _wait_cinematic_advance(_cinematic_hold_seconds(cinematic_text.text))
+
+	await _cinematic_fade_to(0.0, 0.5)
+	cinematic.visible = false
+	_cinematic_running = false
+
+
+func _cinematic_hold_seconds(texto: String) -> float:
+	var chars := texto.length()
+	var s := 2.4 + float(chars) / 18.0
+	return clampf(s, 6.0, 12.0)
+
+
+func _cinematic_fade_to(alpha: float, seconds: float) -> void:
+	if cinematic == null:
+		return
+	var tween := create_tween()
+	tween.tween_property(cinematic, "modulate:a", alpha, seconds)
+	await tween.finished
+
+
+func _wait_cinematic_advance(hold_seconds: float) -> void:
+	var start_ms := Time.get_ticks_msec()
+	var hold_ms := int(hold_seconds * 1000.0)
+	var min_skip_ms := 350
+	while true:
+		var now := Time.get_ticks_msec()
+		if now - start_ms >= hold_ms:
+			return
+		if now - start_ms >= min_skip_ms and Input.is_action_just_pressed("action_button"):
+			return
+		await get_tree().process_frame
+
+
+func _load_cinematic_texture(path: String) -> Texture2D:
+	if path == "":
+		return null
+	if not ResourceLoader.exists(path):
+		return null
+	var res = ResourceLoader.load(path)
+	if res is Texture2D:
+		return res as Texture2D
+	return null
 
 
 func _wait_for_player_movable(timeout_seconds: float = 3.0) -> Node:

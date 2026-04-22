@@ -1,6 +1,7 @@
 extends Control
 
 var modo_slots := ""  # "new" o "load"
+var _starting_new_game := false
 
 func _ready():
 
@@ -87,10 +88,18 @@ func _update_slots():
 func _on_slot_pressed(slot: int):
 
 	if modo_slots == "new":
+		if _starting_new_game:
+			return
+		_starting_new_game = true
+
 		if ControladorPartida.slot_exists(slot):
 			ControladorPartida.delete_slot(slot)
 
-		# Aquí solo añadimos esto: delegar en ControladorPartida
+		$FondoOscuro.visible = false
+		$FondoOscuro/MenuSlots.visible = false
+		$OpcionesVentana.visible = false
+		$VBoxContainer.visible = false
+		await HUD.reproducir_cinematica_intro()
 		FadeLayer.fade_out_and_call(func():
 			ControladorPartida.new_game(slot)
 		)

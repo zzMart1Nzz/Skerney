@@ -62,6 +62,52 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(1, 0.12, 0.12, 1)
 
+[node name="Cinematic" type="Control" parent="." unique_id=2093485664]
+visible = false
+z_index = 60
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Image" type="TextureRect" parent="Cinematic" unique_id=2093485665]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="TextBg" type="ColorRect" parent="Cinematic" unique_id=2093485666]
+anchors_preset = 14
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -170.0
+grow_horizontal = 2
+grow_vertical = 0
+color = Color(0, 0, 0, 0.72)
+
+[node name="Text" type="Label" parent="Cinematic" unique_id=2093485667]
+anchors_preset = 14
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 28.0
+offset_top = -160.0
+offset_right = -28.0
+offset_bottom = -18.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("2_xwi0g")
+theme_override_font_sizes/font_size = 26
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+autowrap_mode = 3
+text = ""
+vertical_alignment = 1
+
 [node name="DeathMenu" type="Control" parent="." unique_id=1221456141]
 visible = false
 z_index = 50
