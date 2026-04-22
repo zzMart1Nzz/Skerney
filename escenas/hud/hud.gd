@@ -4,8 +4,10 @@ extends CanvasLayer
 @onready var quote_overlay := $QuoteOverlay
 @onready var quote_label := $QuoteOverlay/QuoteLabel
 @onready var danger_overlay := $DangerOverlay
+@onready var music_player := $MusicPlayer
 @onready var cinematic := $Cinematic
 @onready var cinematic_image := $Cinematic/Image
+@onready var cinematic_text_bg := $Cinematic/TextBg
 @onready var cinematic_text := $Cinematic/Text
 @onready var death_menu := $DeathMenu
 @onready var btn_retry := $DeathMenu/Panel/VBoxContainer/RetryButton
@@ -144,20 +146,23 @@ func reproducir_cinematica_intro() -> void:
 	]
 
 	cinematic.visible = true
-	cinematic.modulate.a = 0.0
 	cinematic_text.text = ""
 	cinematic_image.texture = null
-	await _cinematic_fade_to(1.0, 0.6)
+	cinematic_image.modulate.a = 0.0
+	cinematic_text.modulate.a = 0.0
+	if cinematic_text_bg != null:
+		cinematic_text_bg.modulate.a = 0.0
+	await _cinematic_fade_content_to(1.0, 0.6)
 
 	for s in slides:
-		await _cinematic_fade_to(0.0, 0.35)
+		await _cinematic_fade_content_to(0.0, 0.35)
 		var tex := _load_cinematic_texture(s.get("path", ""))
 		cinematic_image.texture = tex
 		cinematic_text.text = str(s.get("text", ""))
-		await _cinematic_fade_to(1.0, 0.35)
+		await _cinematic_fade_content_to(1.0, 0.35)
 		await _wait_cinematic_advance(_cinematic_hold_seconds(cinematic_text.text))
 
-	await _cinematic_fade_to(0.0, 0.5)
+	await _cinematic_fade_content_to(0.0, 0.5)
 	cinematic.visible = false
 	_cinematic_running = false
 
@@ -168,11 +173,14 @@ func _cinematic_hold_seconds(texto: String) -> float:
 	return clampf(s, 6.0, 12.0)
 
 
-func _cinematic_fade_to(alpha: float, seconds: float) -> void:
-	if cinematic == null:
+func _cinematic_fade_content_to(alpha: float, seconds: float) -> void:
+	if cinematic_image == null or cinematic_text == null:
 		return
 	var tween := create_tween()
-	tween.tween_property(cinematic, "modulate:a", alpha, seconds)
+	tween.tween_property(cinematic_image, "modulate:a", alpha, seconds)
+	tween.parallel().tween_property(cinematic_text, "modulate:a", alpha, seconds)
+	if cinematic_text_bg != null:
+		tween.parallel().tween_property(cinematic_text_bg, "modulate:a", alpha, seconds)
 	await tween.finished
 
 
@@ -222,6 +230,8 @@ func _on_scene_changed(scene_root: Node = null) -> void:
 		scene_root = get_tree().current_scene
 	if scene_root == null:
 		return
+	await get_tree().process_frame
+	_sync_music_from_scene(scene_root)
 	if (scene_root as Node).scene_file_path.ends_with("res://escenas/sala_puzzle/sala_puzzle.tscn"):
 		if ControladorPartida.temp_data.get("last_door_id", "") == "puzzle_to_pasillo" and not ControladorPartida.temp_data.get("puzzle_looping", false):
 			ControladorPartida.temp_data["puzzle_stage_santayana_puzzle"] = 0
@@ -232,6 +242,50 @@ func _on_scene_changed(scene_root: Node = null) -> void:
 		await _wait_for_player_movable()
 		await get_tree().create_timer(0.05).timeout
 		mostrar_cita("Quien no recuerda el pasado está condenado a repetirlo.\n— George Santayana")
+
+
+func _sync_music_from_scene(scene_root: Node) -> void:
+	if music_player == null or scene_root == null:
+		return
+
+	var scene_music = _find_scene_music_player(scene_root)
+	if scene_music == null:
+		return
+
+	var stream = scene_music.stream
+	if stream == null:
+		return
+
+	var pos := 0.0
+	if scene_music.playing:
+		pos = scene_music.get_playback_position()
+
+	if music_player.stream == stream:
+		if not music_player.playing:
+			music_player.volume_db = scene_music.volume_db
+			music_player.play(pos)
+	else:
+		music_player.stop()
+		music_player.stream = stream
+		music_player.volume_db = scene_music.volume_db
+		music_player.play(pos)
+
+	scene_music.autoplay = false
+	scene_music.stop()
+
+
+func _find_scene_music_player(root: Node) -> AudioStreamPlayer2D:
+	var stack: Array[Node] = [root]
+	while not stack.is_empty():
+		var n = stack.pop_back()
+		if n is AudioStreamPlayer2D:
+			var p := n as AudioStreamPlayer2D
+			if p.bus == &"Music":
+				return p
+		for c in n.get_children():
+			if c is Node:
+				stack.push_back(c)
+	return null
 
 
 func _update_puzzle_candles(scene_root: Node) -> void:

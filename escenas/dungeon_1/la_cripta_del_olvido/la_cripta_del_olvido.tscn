@@ -88,5 +88,5 @@ visible = false
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." unique_id=942085749]
 stream = ExtResource("6_ho3at")
 volume_db = -2.0
-autoplay = true
+autoplay = false
 bus = &"Music"

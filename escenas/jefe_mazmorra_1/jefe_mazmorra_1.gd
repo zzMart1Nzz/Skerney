@@ -94,7 +94,9 @@ enum FirePattern { AIMED_TRIPLE, CROSS_4, CIRCLE_8 }
 @export var contact_damage_range: float = 12.0
 @export var contact_damage_cooldown: float = 0.65
 @export var hit_stun_time: float = 0.22
-@export var hit_invuln_time: float = 0.18
+@export var hit_invuln_time: float = 0.55
+@export var hit_flash_time: float = 0.12
+@export var hit_flash_strength: float = 0.75
 @export var knockback_speed: float = 70.0
 @export var knockback_time: float = 0.08
 
@@ -115,6 +117,14 @@ enum FirePattern { AIMED_TRIPLE, CROSS_4, CIRCLE_8 }
 @export var fireball_spawn_offset: Vector2 = Vector2(-18, 22)
 @export var fireball_frames: Array[Texture2D] = []
 @export var fireball_frames_fps: float = 12.0
+
+@export var anti_spam_enabled: bool = true
+@export var anti_spam_hit_window: float = 1.0
+@export var anti_spam_hit_threshold: int = 3
+@export var anti_spam_cooldown: float = 2.2
+@export var anti_spam_projectile_speed: float = 110.0
+@export var anti_spam_projectile_radius: float = 7.0
+@export var anti_spam_trigger_range: float = 180.0
 
 @export var arena_center: Vector2 = Vector2.ZERO
 @export var arena_radius: float = 120.0
@@ -151,6 +161,10 @@ var _shake_tween: Tween = null
 var _shake_cam: Camera2D = null
 var _shake_base: Vector2 = Vector2.ZERO
 var _shake_strength: float = 0.0
+var _hit_flash_left := 0.0
+var _anti_spam_window_left := 0.0
+var _anti_spam_hits := 0
+var _anti_spam_cd_left := 0.0
 
 func _enemy_key() -> String:
 	if enemy_id != "":
@@ -182,6 +196,14 @@ func _physics_process(delta: float) -> void:
 		return
 
 	_update_target()
+
+	if _hit_flash_left > 0.0:
+		_hit_flash_left = maxf(0.0, _hit_flash_left - delta)
+	if _anti_spam_window_left > 0.0:
+		_anti_spam_window_left = maxf(0.0, _anti_spam_window_left - delta)
+	if _anti_spam_cd_left > 0.0:
+		_anti_spam_cd_left = maxf(0.0, _anti_spam_cd_left - delta)
+	_register_anti_spam_press()
 
 	if _knockback_left > 0.0:
 		_knockback_left = maxf(0.0, _knockback_left - delta)
@@ -409,7 +431,11 @@ func _update_anim() -> void:
 	if anim == null or anim.sprite_frames == null:
 		return
 	anim.flip_h = _facing_right
-	anim.modulate = phase2_tint if _phase2_started else phase1_tint
+	var base := phase2_tint if _phase2_started else phase1_tint
+	if _hit_flash_left > 0.0 and hit_flash_time > 0.0:
+		var t := clampf(_hit_flash_left / hit_flash_time, 0.0, 1.0) * hit_flash_strength
+		base = base.lerp(Color(1, 1, 1, 1), t)
+	anim.modulate = base
 	if _state == BossState.DEAD:
 		return
 	if _state == BossState.MELEE or _state == BossState.FIRE:
@@ -506,11 +532,18 @@ func _fire_circle8() -> void:
 
 
 func _spawn_fireball(dir: Vector2) -> void:
+	_spawn_fireball_with(dir, -1.0, -1.0)
+
+
+func _spawn_fireball_with(dir: Vector2, speed_override: float, radius_override: float) -> void:
 	var p := Projectile.new()
 	p.damage = projectile_damage
 	p.lifetime = projectile_lifetime
-	p.velocity = dir.normalized() * (projectile_speed * _difficulty_mult())
-	p.visual_radius = projectile_radius
+	var speed := projectile_speed
+	if speed_override > 0.0:
+		speed = speed_override
+	p.velocity = dir.normalized() * (speed * _difficulty_mult())
+	p.visual_radius = projectile_radius if radius_override <= 0.0 else radius_override
 	p.z = projectile_z_index
 	p.frames = fireball_frames
 	p.frames_fps = fireball_frames_fps
@@ -520,7 +553,7 @@ func _spawn_fireball(dir: Vector2) -> void:
 
 	var cs := CollisionShape2D.new()
 	var shape := CircleShape2D.new()
-	shape.radius = projectile_radius
+	shape.radius = p.visual_radius
 	cs.shape = shape
 	p.add_child(cs)
 
@@ -654,6 +687,7 @@ func take_damage(amount: int = 1) -> void:
 		return
 	hp -= amount
 	_hit_invuln = hit_invuln_time
+	_hit_flash_left = hit_flash_time
 
 	if _state == BossState.FIRE:
 		_fire_hits += 1
@@ -673,6 +707,65 @@ func take_damage(amount: int = 1) -> void:
 	if _prev_state == BossState.MELEE:
 		_prev_state = BossState.CHASE
 	_set_state(BossState.HIT)
+
+
+func _register_anti_spam_hit() -> void:
+	if not anti_spam_enabled:
+		return
+	if anti_spam_hit_threshold <= 0:
+		return
+	if anti_spam_hit_window <= 0.0:
+		return
+	if _anti_spam_cd_left > 0.0:
+		return
+	_register_anti_spam_step()
+
+
+func _register_anti_spam_press() -> void:
+	if not anti_spam_enabled:
+		return
+	if _anti_spam_cd_left > 0.0:
+		return
+	if _state == BossState.DEAD or _state == BossState.RESURRECT:
+		return
+	if _target == null or not is_instance_valid(_target):
+		return
+	if anti_spam_trigger_range > 0.0:
+		var d := _target.global_position.distance_to(global_position)
+		if d > anti_spam_trigger_range:
+			return
+	if not Input.is_action_just_pressed("action_button"):
+		return
+	_register_anti_spam_step()
+
+
+func _register_anti_spam_step() -> void:
+	if anti_spam_hit_threshold <= 0:
+		return
+	if anti_spam_hit_window <= 0.0:
+		return
+	if _anti_spam_window_left <= 0.0:
+		_anti_spam_window_left = anti_spam_hit_window
+		_anti_spam_hits = 0
+	_anti_spam_hits += 1
+
+	if _anti_spam_hits < anti_spam_hit_threshold:
+		return
+
+	_anti_spam_hits = 0
+	_anti_spam_window_left = 0.0
+	_anti_spam_cd_left = anti_spam_cooldown
+	_fire_anti_spam_projectile()
+
+
+
+func _fire_anti_spam_projectile() -> void:
+	if _target == null or not is_instance_valid(_target):
+		return
+	var dir := (_target.global_position - global_position).normalized()
+	if dir == Vector2.ZERO:
+		dir = Vector2.RIGHT if _facing_right else Vector2.LEFT
+	_spawn_fireball_with(dir, anti_spam_projectile_speed, anti_spam_projectile_radius)
 
 
 

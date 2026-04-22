@@ -133,5 +133,5 @@ rotation = -3.1415925
 scale = Vector2(0.99999994, 0.99999994)
 stream = ExtResource("7_235kc")
 volume_db = -2.0
-autoplay = true
+autoplay = false
 bus = &"Music"

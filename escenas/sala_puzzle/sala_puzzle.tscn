@@ -65,7 +65,7 @@ position = Vector2(-56, -92)
 scale = Vector2(0.125, 0.125)
 stream = ExtResource("3_xwu68")
 volume_db = -2.0
-autoplay = true
+autoplay = false
 bus = &"Music"
 
 [node name="VelaDerecha" parent="." unique_id=1589971008 groups=["PuzzleVelaDerecha"] instance=ExtResource("5_kb6py")]

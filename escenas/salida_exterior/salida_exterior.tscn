@@ -3,6 +3,7 @@
 [ext_resource type="TileSet" uid="uid://vl6t6e3av17h" path="res://tile_sets/dungeon_cave.tres" id="1_ukjld"]
 [ext_resource type="PackedScene" uid="uid://dfbqskeqtq0mu" path="res://escenas/door/door.tscn" id="2_2digv"]
 [ext_resource type="PackedScene" uid="uid://bg7mbbr6mmnb6" path="res://escenas/Personajes/Skerney/skerney.tscn" id="3_w2573"]
+[ext_resource type="AudioStream" uid="uid://0k3838ag33ka" path="res://assets/music/menu_music/dungeon_music.wav" id="4_2digv"]
 
 [node name="SalidaExterior" type="Node2D" unique_id=411048911]
 
@@ -53,8 +54,6 @@ modulate = Color(0.34509805, 0.5882353, 0.6392157, 1)
 z_index = 1
 position = Vector2(8, -284)
 scale = Vector2(0.125, 0.125)
-collision_layer = 16
-collision_mask = 0
 door_id = "salida_to_exterior"
 target_door_id = "exterior_to_salida"
 starts_open = true
@@ -65,8 +64,6 @@ z_index = 1
 position = Vector2(8, 61)
 rotation = 3.1415927
 scale = Vector2(0.125, 0.125)
-collision_layer = 16
-collision_mask = 0
 next_scene = "res://escenas/sala_enemigo/sala_enemigo.tscn"
 door_id = "salida_to_jefe"
 target_door_id = "jefe_to_salida"
@@ -80,3 +77,8 @@ scale = Vector2(0.66, 0.66)
 [node name="Camera2D" type="Camera2D" parent="Skerney" unique_id=175470182]
 position = Vector2(0, 3.605)
 zoom = Vector2(6.835, 6.835)
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." unique_id=517988126]
+stream = ExtResource("4_2digv")
+volume_db = -2.0
+bus = &"Music"

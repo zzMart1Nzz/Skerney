@@ -376,6 +376,7 @@ layout_mode = 2
 theme_override_fonts/font = ExtResource("9_w4esp")
 
 [node name="Vidas" type="Label" parent="FondoOscuro/MenuSlots/Slot1/Datos" unique_id=196155754]
+visible = false
 texture_filter = 1
 layout_mode = 2
 theme_override_fonts/font = ExtResource("9_w4esp")
@@ -433,6 +434,7 @@ layout_mode = 2
 theme_override_fonts/font = ExtResource("9_w4esp")
 
 [node name="Vidas" type="Label" parent="FondoOscuro/MenuSlots/Slot2/Datos" unique_id=333510299]
+visible = false
 texture_filter = 1
 layout_mode = 2
 theme_override_fonts/font = ExtResource("9_w4esp")
@@ -485,6 +487,7 @@ layout_mode = 2
 theme_override_fonts/font = ExtResource("9_w4esp")
 
 [node name="Vidas" type="Label" parent="FondoOscuro/MenuSlots/Slot3/Datos" unique_id=645079363]
+visible = false
 texture_filter = 1
 layout_mode = 2
 theme_override_fonts/font = ExtResource("9_w4esp")

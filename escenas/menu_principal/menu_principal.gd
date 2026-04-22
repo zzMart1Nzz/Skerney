@@ -70,13 +70,15 @@ func _update_slots():
 				slot_node.get_node("MarcoMiniatura/Miniatura").texture = ImageTexture.create_from_image(img)
 
 			slot_node.get_node("Datos/Fecha").text = data.get("timestamp", "Fecha desconocida")
-			slot_node.get_node("Datos/Tiempo").text = str(data.get("play_time", 0) / 60) + " min"
-			slot_node.get_node("Datos/Vidas").text = str(data.get("lives", 3))
+			var total_seconds := int(data.get("play_time", 0))
+			var total_minutes := total_seconds / 60
+			var hours := total_minutes / 60
+			var minutes := total_minutes % 60
+			slot_node.get_node("Datos/Tiempo").text = "%02d:%02d" % [hours, minutes]
 		else:
 			slot_node.get_node("MarcoMiniatura/Miniatura").texture = null
 			slot_node.get_node("Datos/Fecha").text = "Vacío"
 			slot_node.get_node("Datos/Tiempo").text = ""
-			slot_node.get_node("Datos/Vidas").text = ""
 
 
 

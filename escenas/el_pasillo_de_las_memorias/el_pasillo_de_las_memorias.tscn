@@ -68,7 +68,7 @@ visible = false
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." unique_id=1917655229]
 stream = ExtResource("2_goial")
 volume_db = -2.0
-autoplay = true
+autoplay = false
 bus = &"Music"
 
 [node name="DoorJefe" parent="." unique_id=961541402 instance=ExtResource("3_dj7iq")]

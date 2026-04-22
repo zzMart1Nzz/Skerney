@@ -6,6 +6,9 @@
 [node name="HUD" type="CanvasLayer" unique_id=132858156]
 script = ExtResource("1_e6xi8")
 
+[node name="MusicPlayer" type="AudioStreamPlayer" parent="." unique_id=1430348244]
+bus = &"Music"
+
 [node name="MensajeGuardado" type="Label" parent="." unique_id=109638551]
 visible = false
 modulate = Color(1, 1, 1, 0)
@@ -70,6 +73,14 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="Bg" type="ColorRect" parent="Cinematic" unique_id=2093485668]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
 
 [node name="Image" type="TextureRect" parent="Cinematic" unique_id=2093485665]
 anchors_preset = 15

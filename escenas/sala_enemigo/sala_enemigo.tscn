@@ -88,5 +88,5 @@ key_display_name = "Llave de la sala del puzzle"
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." unique_id=1960254605]
 stream = ExtResource("6_63mjx")
 volume_db = -2.0
-autoplay = true
+autoplay = false
 bus = &"Music"
