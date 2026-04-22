@@ -18,3 +18,11 @@ func fade_out_and_call(callback: Callable):
 	await anim.animation_finished
 	callback.call()
 	anim.play("fade_in")
+
+func fade_out_blocking() -> void:
+	anim.play("fade_out")
+	await anim.animation_finished
+
+func fade_in_blocking() -> void:
+	anim.play("fade_in")
+	await anim.animation_finished

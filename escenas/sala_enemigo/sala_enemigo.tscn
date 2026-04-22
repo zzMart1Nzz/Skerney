@@ -62,10 +62,12 @@ starts_open = true
 [node name="Slime_1" parent="." unique_id=667194295 instance=ExtResource("3_ap83h")]
 position = Vector2(-39, -26)
 scale = Vector2(0.99999994, 0.99999994)
+enemy_id = "slime1"
 
 [node name="Slime_2" parent="." unique_id=702095763 instance=ExtResource("3_ap83h")]
 position = Vector2(36, -27)
 scale = Vector2(0.9999999, 0.9999999)
+enemy_id = "slime2"
 
 [node name="Skerney" parent="." unique_id=2015512818 instance=ExtResource("2_15yny")]
 modulate = Color(0.34509805, 0.5882353, 0.6392157, 1)
@@ -80,3 +82,4 @@ zoom = Vector2(6.835, 6.835)
 position = Vector2(6, -65)
 key_id = "llave_puzzle"
 chest_id = "cofre_enemiga"
+key_display_name = "Llave de la sala del puzzle"

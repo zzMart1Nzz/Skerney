@@ -26,7 +26,7 @@ func enter():
 	skerney.begin_attack()
 
 
-func update(delta):
+func update(_delta):
 	var anim_name = skerney.anim.animation
 	var last_frame = skerney.anim.sprite_frames.get_frame_count(anim_name) - 1
 

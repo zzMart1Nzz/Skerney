@@ -58,6 +58,7 @@ modulate = Color(0.34509805, 0.5882353, 0.6392157, 1)
 position = Vector2(-66, -49)
 key_id = "llave_pasillo"
 chest_id = "cofre_cripta"
+key_display_name = "Llave de la cripta"
 
 [node name="Door" parent="." unique_id=1626325775 instance=ExtResource("3_qa2il")]
 modulate = Color(0.34509805, 0.5882353, 0.6392157, 1)

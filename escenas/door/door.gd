@@ -5,6 +5,7 @@ extends Area2D
 @export var door_id: String = ""
 @export var target_door_id: String = ""
 @export var starts_open: bool = false
+@export var close_after_player_enters: bool = false
 
 @export var door_edge_offset: float = 8.0
 @export var enter_distance: float = 16.0
@@ -99,6 +100,9 @@ func _ready():
 				skerney.can_move = true
 				skerney.input_vector = Vector2.ZERO
 				skerney.velocity = Vector2.ZERO
+				if close_after_player_enters:
+					await get_tree().create_timer(0.05).timeout
+					close_door()
 
 				ControladorPartida.temp_data.erase("last_door_entry")
 				ControladorPartida.temp_data.erase("last_door_id")
@@ -148,6 +152,18 @@ func open_door():
 	ControladorPartida.temp_data["opened_doors"][door_id] = true
 
 
+func close_door() -> void:
+	opened = false
+	if sprite != null:
+		sprite.frame = 0
+	if collision != null:
+		collision.disabled = false
+	if solid_collision != null:
+		solid_collision.disabled = false
+	if ControladorPartida.temp_data.has("opened_doors"):
+		ControladorPartida.temp_data["opened_doors"].erase(door_id)
+
+
 # Determina si el jugador entró desde arriba o desde abajo
 func get_entry_direction(skerney: Node2D) -> String:
 	if is_instance_valid(spawn_point):
@@ -171,6 +187,10 @@ func start_cutscene(skerney):
 	if is_transitioning:
 		return
 	is_transitioning = true
+
+	if door_id == "salida_to_exterior":
+		await _play_ending_cutscene(skerney)
+		return
 
 	if puzzle_id != "":
 		var stage_key = "puzzle_stage_" + puzzle_id
@@ -237,6 +257,41 @@ func start_cutscene(skerney):
 	# limpieza por seguridad
 	skerney.input_vector = Vector2.ZERO
 	skerney.velocity = Vector2.ZERO
+
+
+func _play_ending_cutscene(skerney: Node) -> void:
+	ControladorPartida.temp_data.erase("last_door_entry")
+	ControladorPartida.temp_data.erase("last_door_id")
+	ControladorPartida.temp_data.erase("puzzle_looping")
+
+	var dir := get_entry_direction(skerney as Node2D)
+	skerney.can_move = false
+	entry_detector.set_deferred("monitoring", false)
+
+	if dir == "from_up":
+		skerney.input_vector = Vector2(0, 1)
+		skerney.last_direction = "down"
+	else:
+		skerney.input_vector = Vector2(0, -1)
+		skerney.last_direction = "up"
+	_try_play_walk_anim(skerney, dir)
+
+	var start_pos: Vector2 = spawn_point.global_position - skerney.input_vector * door_edge_offset
+	skerney.global_position = start_pos
+
+	var move_inside: Vector2 = skerney.input_vector * enter_distance
+	var tween := create_tween()
+	tween.tween_property(skerney, "global_position", start_pos + move_inside, enter_duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	await tween.finished
+
+	skerney.input_vector = Vector2.ZERO
+	skerney.velocity = Vector2.ZERO
+
+	await FadeLayer.fade_out_blocking()
+	await HUD.mostrar_texto_final("Una aventura te espera...", 1.6, 0.5, 0.7)
+	await HUD.mostrar_texto_final("Gracias por jugar", 1.4, 0.4, 0.6)
+	get_tree().change_scene_to_file("res://escenas/menu_principal/menu_principal.tscn")
+	FadeLayer.fade_in()
 
 
 func _play_puzzle_enter(skerney: Node) -> void:

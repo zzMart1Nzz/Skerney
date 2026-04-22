@@ -13,5 +13,5 @@ func enter():
 func exit():
 	pass
 
-func update(delta):
+func update(_delta):
 	pass

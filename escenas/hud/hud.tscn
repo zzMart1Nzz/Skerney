@@ -51,6 +51,17 @@ text = ""
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="DangerOverlay" type="ColorRect" parent="." unique_id=1419632572]
+visible = false
+z_index = 45
+modulate = Color(1, 1, 1, 0)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 0.12, 0.12, 1)
+
 [node name="DeathMenu" type="Control" parent="." unique_id=1221456141]
 visible = false
 z_index = 50

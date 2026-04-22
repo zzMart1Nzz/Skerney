@@ -29,15 +29,11 @@ func die() -> void:
 	if anim and anim.sprite_frames and anim.sprite_frames.has_animation("die"):
 		anim.sprite_frames.set_animation_loop("die", false)
 		anim.play("die")
+		await anim.animation_finished
 		var frames := anim.sprite_frames.get_frame_count("die")
-		var fps := anim.sprite_frames.get_animation_speed("die")
-		if fps <= 0.0:
-			fps = 10.0
 		if frames > 0:
-			var seconds := float(frames - 1) / fps
-			await get_tree().create_timer(seconds).timeout
 			anim.frame = frames - 1
-			anim.stop()
+		anim.pause()
 
 	HUD.mostrar_menu_muerte()
 
@@ -142,7 +138,9 @@ func try_attack_hit(damage: int = 1) -> void:
 		if _attack_hit_ids.has(id):
 			continue
 		_attack_hit_ids[id] = true
-		if body.has_method("take_damage"):
+		if body.has_method("hit_by"):
+			body.hit_by(global_position, damage)
+		elif body.has_method("take_damage"):
 			body.take_damage(damage)
 		elif body.has_method("die"):
 			body.die()

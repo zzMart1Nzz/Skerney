@@ -5,16 +5,29 @@ extends CharacterBody2D
 @export var chase_range: float = 180.0
 @export var stop_distance: float = 10.0
 @export var anim: AnimatedSprite2D
-@export var hp: int = 1
+@export var hp: int = 3
+@export var knockback_speed: float = 48.0
+@export var knockback_time: float = 0.08
+@export var enemy_id: String = ""
 
 var _can_kill := true
 var _dead := false
 var _target: Node2D = null
+var _knockback_vel := Vector2.ZERO
+var _knockback_left := 0.0
 
 @onready var detect_radius: Area2D = $DetectRadius
 @onready var hitbox: Area2D = $Hitbox
 
+func _enemy_key() -> String:
+	if enemy_id != "":
+		return enemy_id
+	return str(get_tree().current_scene.scene_file_path) + ":" + str(get_path())
+
 func _ready() -> void:
+	if ControladorPartida.temp_data.get("killed_enemies", {}).get(_enemy_key(), false):
+		queue_free()
+		return
 	if is_instance_valid(detect_radius):
 		var shape_node := detect_radius.get_node_or_null("CollisionShape2D")
 		if shape_node and shape_node.shape is CircleShape2D:
@@ -35,6 +48,11 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	if _dead:
 		velocity = Vector2.ZERO
+		move_and_slide()
+		return
+	if _knockback_left > 0.0:
+		_knockback_left = maxf(0.0, _knockback_left - delta)
+		velocity = _knockback_vel
 		move_and_slide()
 		return
 
@@ -115,19 +133,33 @@ func take_damage(amount: int = 1) -> void:
 		die()
 
 
+func hit_by(attacker_pos: Vector2, damage: int = 1) -> void:
+	if _dead:
+		return
+	var dir := (global_position - attacker_pos)
+	if dir.length() < 0.001:
+		dir = Vector2.RIGHT
+	_knockback_vel = dir.normalized() * knockback_speed
+	_knockback_left = knockback_time
+	take_damage(damage)
+
+
 func die() -> void:
 	if _dead:
 		return
 	_dead = true
 	_can_kill = false
+	if not ControladorPartida.temp_data.has("killed_enemies"):
+		ControladorPartida.temp_data["killed_enemies"] = {}
+	ControladorPartida.temp_data["killed_enemies"][_enemy_key()] = true
 	velocity = Vector2.ZERO
 	set_deferred("collision_layer", 0)
 	set_deferred("collision_mask", 0)
-	var hitbox := get_node_or_null("Hitbox")
-	if hitbox:
-		hitbox.set_deferred("monitoring", false)
-		hitbox.set_deferred("collision_layer", 0)
-		hitbox.set_deferred("collision_mask", 0)
+	var hitbox_node := get_node_or_null("Hitbox")
+	if hitbox_node:
+		hitbox_node.set_deferred("monitoring", false)
+		hitbox_node.set_deferred("collision_layer", 0)
+		hitbox_node.set_deferred("collision_mask", 0)
 	if anim and anim.sprite_frames and anim.sprite_frames.has_animation("die"):
 		anim.sprite_frames.set_animation_loop("die", false)
 		anim.play("die")

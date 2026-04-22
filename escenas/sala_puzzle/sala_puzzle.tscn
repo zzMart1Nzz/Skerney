@@ -111,9 +111,10 @@ puzzle_choice_key = "right"
 puzzle_correct_stage = 2
 
 [node name="ChestBossKey" parent="." unique_id=1589971004 instance=ExtResource("4_q5s5p")]
-position = Vector2(0, -18)
+position = Vector2(9, -18)
 key_id = "llave_jefe"
 chest_id = "cofre_llave_jefe"
+key_display_name = "Llave del jefe"
 required_temp_key = "puzzle_stage_santayana_puzzle"
 required_temp_min_value = 3
 reset_temp_key_on_open = "puzzle_stage_santayana_puzzle"

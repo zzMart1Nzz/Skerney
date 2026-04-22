@@ -3,7 +3,7 @@ extends State
 func enter():
 	_play_idle()
 
-func update(delta):
+func update(_delta):
 	if Input.is_action_just_pressed("action_button") and skerney.interactable == null:
 		state_machine.change_state("attack")
 		return

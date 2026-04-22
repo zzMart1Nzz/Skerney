@@ -3,12 +3,14 @@ extends CanvasLayer
 @onready var mensaje_label := $MensajeGuardado
 @onready var quote_overlay := $QuoteOverlay
 @onready var quote_label := $QuoteOverlay/QuoteLabel
+@onready var danger_overlay := $DangerOverlay
 @onready var death_menu := $DeathMenu
 @onready var btn_retry := $DeathMenu/Panel/VBoxContainer/RetryButton
 @onready var btn_menu := $DeathMenu/Panel/VBoxContainer/MenuButton
 
 var _death_menu_open := false
 var _quote_tween: Tween = null
+var _danger_tween: Tween = null
 
 func _ready() -> void:
 	var tree := get_tree()
@@ -68,10 +70,52 @@ func mostrar_cita(texto: String, hold_seconds: float = 2.6, fade_in_seconds: flo
 	_quote_tween = null
 
 	if locked_player and player != null and is_instance_valid(player) and not _death_menu_open:
-		var is_dead_value = player.get("is_dead") if player.has_method("get") else false
-		if typeof(is_dead_value) == TYPE_BOOL and is_dead_value:
+		var is_dead_value = false
+		if player.has_method("get"):
+			var v = player.get("is_dead")
+			if typeof(v) == TYPE_BOOL:
+				is_dead_value = v
+		if is_dead_value:
 			return
 		player.can_move = prev_can_move
+
+
+func mostrar_peligro(hold_seconds: float = 0.7, peak_alpha: float = 0.35, fade_in_seconds: float = 0.08, fade_out_seconds: float = 0.35) -> void:
+	if danger_overlay == null:
+		return
+	if _danger_tween:
+		_danger_tween.kill()
+		_danger_tween = null
+
+	danger_overlay.visible = true
+	danger_overlay.modulate.a = 0.0
+
+	_danger_tween = create_tween()
+	_danger_tween.tween_property(danger_overlay, "modulate:a", peak_alpha, fade_in_seconds)
+	_danger_tween.tween_interval(hold_seconds)
+	_danger_tween.tween_property(danger_overlay, "modulate:a", 0.0, fade_out_seconds)
+	_danger_tween.finished.connect(func():
+		danger_overlay.visible = false
+		_danger_tween = null
+	)
+
+
+func mostrar_texto_final(texto: String, hold_seconds: float = 1.6, fade_in_seconds: float = 0.5, fade_out_seconds: float = 0.7) -> void:
+	if _quote_tween:
+		_quote_tween.kill()
+		_quote_tween = null
+	quote_label.text = texto
+	quote_overlay.visible = true
+	quote_overlay.modulate.a = 0.0
+
+	_quote_tween = create_tween()
+	_quote_tween.tween_property(quote_overlay, "modulate:a", 1.0, fade_in_seconds)
+	_quote_tween.tween_interval(hold_seconds)
+	_quote_tween.tween_property(quote_overlay, "modulate:a", 0.0, fade_out_seconds)
+	await _quote_tween.finished
+
+	quote_overlay.visible = false
+	_quote_tween = null
 
 
 func _wait_for_player_movable(timeout_seconds: float = 3.0) -> Node:

@@ -23,6 +23,9 @@ func _ready():
 	if not temp_data.has("opened_chests"):
 		temp_data["opened_chests"] = {}   # 🔥 IMPORTANTE
 
+	if not temp_data.has("killed_enemies"):
+		temp_data["killed_enemies"] = {}
+
 	if not temp_data.has("play_time"):
 		temp_data["play_time"] = 0
 
@@ -104,6 +107,8 @@ func load_game(slot: int):
 		temp_data["play_time"] = 0
 	if not temp_data.has("opened_chests"):
 		temp_data["opened_chests"] = {}
+	if not temp_data.has("killed_enemies"):
+		temp_data["killed_enemies"] = {}
 
 	if data.has("level"):
 		get_tree().change_scene_to_file(data["level"])
