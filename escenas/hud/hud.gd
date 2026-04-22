@@ -9,6 +9,7 @@ extends CanvasLayer
 @onready var cinematic_image := $Cinematic/Image
 @onready var cinematic_text_bg := $Cinematic/TextBg
 @onready var cinematic_text := $Cinematic/Text
+@onready var cinematic_flash := $Cinematic/FlashWhite
 @onready var death_menu := $DeathMenu
 @onready var btn_retry := $DeathMenu/Panel/VBoxContainer/RetryButton
 @onready var btn_menu := $DeathMenu/Panel/VBoxContainer/MenuButton
@@ -133,16 +134,16 @@ func reproducir_cinematica_intro() -> void:
 		return
 
 	var slides := [
-		{"path": "res://assets/images/cinematica/Cinematica1.png", "text": "Hace mucho tiempo, dos reinos entraron en guerra. El cielo ardía y la tierra temblaba bajo el choque de ejércitos."},
-		{"path": "res://assets/images/cinematica/Cinematica2.png", "text": "El reino malvado tenía a su guerrero más temido: una sombra en armadura negra, portador de un mandoble maldito."},
-		{"path": "res://assets/images/cinematica/Cinematica3.png", "text": "El reino defensor alzó a su héroe. Con determinación, juró frenar la masacre y proteger lo que quedaba."},
-		{"path": "res://assets/images/cinematica/Cinematica4.png", "text": "La batalla se volvió un caos interminable. Entre fuego y ceniza, ambos rivales se buscaron en medio del campo."},
-		{"path": "res://assets/images/cinematica/Cinematica5.png", "text": "Cuando al fin se encontraron, el acero chocó con furia. El guerrero oscuro llevaba la ventaja y el héroe retrocedía."},
-		{"path": "res://assets/images/cinematica/Cinematica6.png", "text": "Sin otra salida, el héroe invocó un hechizo prohibido. Su sacrificio derrotó al guerrero… pero el mundo pagó el precio."},
-		{"path": "res://assets/images/cinematica/Cinematica7.png", "text": "La luz se apagó. El sol desapareció. Una noche eterna cayó sobre la tierra, y la oscuridad se volvió hogar de monstruos."},
-		{"path": "res://assets/images/cinematica/Cinematica8.png", "text": "Criaturas hambrientas surgieron de la sombra. Durante décadas, el mundo se volvió hostil e implacable."},
-		{"path": "res://assets/images/cinematica/Cinematica9.png", "text": "Pero en lo profundo de una mazmorra, una pequeña alma azul despertó… guiada por una voz que nadie podía ver."},
-		{"path": "res://assets/images/cinematica/Cinematica10.png", "text": "Esa luz encontró un cuerpo olvidado: un esqueleto, una espada… y un destino. La aventura comienza ahora."}
+		{"path": "res://assets/images/cinematica/cinematica_inicial/Cinematica1.png", "text": "Hace mucho tiempo, dos reinos entraron en guerra. El cielo ardía y la tierra temblaba bajo el choque de ejércitos."},
+		{"path": "res://assets/images/cinematica/cinematica_inicial/Cinematica2.png", "text": "El reino malvado tenía a su guerrero más temido: una sombra en armadura negra, portador de un mandoble maldito."},
+		{"path": "res://assets/images/cinematica/cinematica_inicial/Cinematica3.png", "text": "El reino defensor alzó a su héroe. Con determinación, juró frenar la masacre y proteger lo que quedaba."},
+		{"path": "res://assets/images/cinematica/cinematica_inicial/Cinematica4.png", "text": "La batalla se volvió un caos interminable. Entre fuego y ceniza, ambos rivales se buscaron en medio del campo."},
+		{"path": "res://assets/images/cinematica/cinematica_inicial/Cinematica5.png", "text": "Cuando al fin se encontraron, el acero chocó con furia. El guerrero oscuro llevaba la ventaja y el héroe retrocedía."},
+		{"path": "res://assets/images/cinematica/cinematica_inicial/Cinematica6.png", "text": "Sin otra salida, el héroe invocó un hechizo prohibido. Su sacrificio derrotó al guerrero… pero el mundo pagó el precio."},
+		{"path": "res://assets/images/cinematica/cinematica_inicial/Cinematica7.png", "text": "La luz se apagó. El sol desapareció. Una noche eterna cayó sobre la tierra, y la oscuridad se volvió hogar de monstruos."},
+		{"path": "res://assets/images/cinematica/cinematica_inicial/Cinematica8.png", "text": "Criaturas hambrientas surgieron de la sombra. Durante décadas, el mundo se volvió hostil e implacable."},
+		{"path": "res://assets/images/cinematica/cinematica_inicial/Cinematica9.png", "text": "Pero en lo profundo de una mazmorra, una pequeña alma azul despertó… guiada por una voz que nadie podía ver."},
+		{"path": "res://assets/images/cinematica/cinematica_inicial/Cinematica10.png", "text": "Esa luz encontró un cuerpo olvidado: un esqueleto, una espada… y un destino. La aventura comienza ahora."}
 	]
 
 	cinematic.visible = true
@@ -152,19 +153,220 @@ func reproducir_cinematica_intro() -> void:
 	cinematic_text.modulate.a = 0.0
 	if cinematic_text_bg != null:
 		cinematic_text_bg.modulate.a = 0.0
+	await get_tree().process_frame
+	_cinematic_reset_transform()
 	await _cinematic_fade_content_to(1.0, 0.6)
 
-	for s in slides:
-		await _cinematic_fade_content_to(0.0, 0.35)
+	for i in range(slides.size()):
+		var s = slides[i]
+		var dir := _cinematic_dir_for_slide(i)
+		await _cinematic_transition_out(0.45, dir)
 		var tex := _load_cinematic_texture(s.get("path", ""))
 		cinematic_image.texture = tex
 		cinematic_text.text = str(s.get("text", ""))
-		await _cinematic_fade_content_to(1.0, 0.35)
-		await _wait_cinematic_advance(_cinematic_hold_seconds(cinematic_text.text))
+		await _cinematic_transition_in(0.45, dir)
+		var hold := _cinematic_hold_seconds(cinematic_text.text)
+		var motion := _cinematic_start_motion(hold, dir)
+		await _wait_cinematic_advance(hold)
+		if motion != null:
+			motion.kill()
 
-	await _cinematic_fade_content_to(0.0, 0.5)
+	await _cinematic_transition_out(0.7, Vector2.DOWN)
 	cinematic.visible = false
 	_cinematic_running = false
+
+
+func reproducir_cinematica_salida() -> void:
+	if _cinematic_running:
+		return
+	_cinematic_running = true
+	if cinematic == null or cinematic_image == null:
+		_cinematic_running = false
+		return
+
+	cinematic.visible = true
+	var restore_text_bg_visible := false
+	var restore_text_visible := false
+	if cinematic_text_bg != null:
+		restore_text_bg_visible = cinematic_text_bg.visible
+		cinematic_text_bg.visible = false
+		cinematic_text_bg.modulate.a = 0.0
+	if cinematic_text != null:
+		restore_text_visible = cinematic_text.visible
+		cinematic_text.visible = false
+		cinematic_text.text = ""
+		cinematic_text.modulate.a = 0.0
+	if cinematic_flash != null:
+		cinematic_flash.modulate.a = 0.0
+
+	var p1 := "res://assets/images/cinematica/cinematica_salida_mazmorra_1/Cinematica11.png"
+	var p2 := "res://assets/images/cinematica/cinematica_salida_mazmorra_1/Cinematica12.png"
+	cinematic_image.texture = _load_cinematic_texture(p1)
+	cinematic_image.modulate.a = 0.0
+	await _cinematic_fade_image_to(1.0, 0.35)
+	await _wait_cinematic_advance(6.5)
+
+	if cinematic_flash != null:
+		var ft := create_tween()
+		ft.tween_property(cinematic_flash, "modulate:a", 1.0, 0.12).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+		ft.tween_callback(func():
+			cinematic_image.texture = _load_cinematic_texture(p2)
+		)
+		ft.tween_property(cinematic_flash, "modulate:a", 0.0, 0.45).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		await ft.finished
+	else:
+		cinematic_image.texture = _load_cinematic_texture(p2)
+
+	await _wait_cinematic_advance(6.5)
+	await _cinematic_fade_image_to(0.0, 0.5)
+	cinematic.visible = false
+	_cinematic_running = false
+	if cinematic_text_bg != null:
+		cinematic_text_bg.visible = restore_text_bg_visible
+	if cinematic_text != null:
+		cinematic_text.visible = restore_text_visible
+
+
+func _cinematic_fade_image_to(alpha: float, seconds: float) -> void:
+	if cinematic_image == null:
+		return
+	var tween := create_tween()
+	tween.tween_property(cinematic_image, "modulate:a", alpha, seconds)
+	await tween.finished
+
+
+func reproducir_cinematica_trailer() -> void:
+	if _cinematic_running:
+		return
+	_cinematic_running = true
+	if cinematic == null or cinematic_image == null or cinematic_text == null:
+		_cinematic_running = false
+		return
+
+	cinematic.visible = true
+	if cinematic_text_bg != null:
+		cinematic_text_bg.visible = true
+	cinematic_text.visible = true
+	cinematic_text.text = ""
+	cinematic_image.texture = null
+	cinematic_image.modulate.a = 0.0
+	cinematic_text.modulate.a = 0.0
+	if cinematic_text_bg != null:
+		cinematic_text_bg.modulate.a = 0.0
+	if cinematic_flash != null:
+		cinematic_flash.modulate.a = 0.0
+
+	var slides := [
+		{"path": "res://assets/images/cinematica/trailer/trailer1.png", "text": "¡Atrás!"},
+		{"path": "res://assets/images/cinematica/trailer/trailer2.png", "text": "¡Cuidado, hija… sepárate de él!"},
+		{"path": "res://assets/images/cinematica/trailer/trailer3.png", "text": "No tengas miedo… estás a salvo."},
+		{"path": "res://assets/images/cinematica/trailer/trailer4.png", "text": "Estos recuerdos… ¿por qué duelen tanto?"},
+		{"path": "res://assets/images/cinematica/trailer/trailer5.png", "text": "Te estaré esperando… viejo amigo…"}
+	]
+
+	await get_tree().process_frame
+	_cinematic_reset_transform()
+	await _cinematic_fade_content_to(1.0, 0.6)
+	for i in range(slides.size()):
+		var s = slides[i]
+		var dir := _cinematic_dir_for_slide(i)
+		await _cinematic_transition_out(0.45, dir)
+		cinematic_image.texture = _load_cinematic_texture(str(s.get("path", "")))
+		cinematic_text.text = str(s.get("text", ""))
+		await _cinematic_transition_in(0.45, dir)
+		var hold := _cinematic_hold_seconds(cinematic_text.text)
+		var motion := _cinematic_start_motion(hold, dir)
+		await _wait_cinematic_advance(hold)
+		if motion != null:
+			motion.kill()
+	await _cinematic_transition_out(0.8, Vector2.RIGHT)
+
+	cinematic.visible = false
+	_cinematic_running = false
+
+
+func _cinematic_reset_transform() -> void:
+	if cinematic_image == null:
+		return
+	cinematic_image.pivot_offset = cinematic_image.size * 0.5
+	cinematic_image.rotation = 0.0
+	cinematic_image.scale = Vector2.ONE
+	cinematic_image.position = Vector2.ZERO
+
+
+func _cinematic_dir_for_slide(i: int) -> Vector2:
+	var m := i % 3
+	if m == 0:
+		return Vector2.RIGHT
+	if m == 1:
+		return Vector2.DOWN
+	return Vector2.LEFT
+
+
+func _cinematic_rot_deg_for_dir(dir: Vector2) -> float:
+	if dir.x > 0.5:
+		return 10.0
+	if dir.x < -0.5:
+		return -10.0
+	if dir.y > 0.5:
+		return 6.0
+	return 0.0
+
+
+func _cinematic_offset_for_dir(dir: Vector2, amount: float) -> Vector2:
+	if dir == Vector2.ZERO:
+		return Vector2.ZERO
+	return dir.normalized() * amount
+
+
+func _cinematic_transition_out(seconds: float, dir: Vector2) -> void:
+	if cinematic_image == null or cinematic_text == null:
+		return
+	var rot := deg_to_rad(_cinematic_rot_deg_for_dir(dir))
+	var off := _cinematic_offset_for_dir(dir, 30.0)
+	var tween := create_tween()
+	tween.tween_property(cinematic_image, "modulate:a", 0.0, seconds)
+	tween.parallel().tween_property(cinematic_image, "rotation", rot, seconds).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tween.parallel().tween_property(cinematic_image, "position", off, seconds).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tween.parallel().tween_property(cinematic_image, "scale", Vector2.ONE * 1.03, seconds).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tween.parallel().tween_property(cinematic_text, "modulate:a", 0.0, seconds)
+	if cinematic_text_bg != null:
+		tween.parallel().tween_property(cinematic_text_bg, "modulate:a", 0.0, seconds)
+	await tween.finished
+
+
+func _cinematic_transition_in(seconds: float, dir: Vector2) -> void:
+	if cinematic_image == null or cinematic_text == null:
+		return
+	var rot := deg_to_rad(_cinematic_rot_deg_for_dir(dir))
+	var off := _cinematic_offset_for_dir(dir, 30.0)
+	cinematic_image.rotation = -rot
+	cinematic_image.position = -off
+	cinematic_image.scale = Vector2.ONE * 1.03
+	var tween := create_tween()
+	tween.tween_property(cinematic_image, "modulate:a", 1.0, seconds)
+	tween.parallel().tween_property(cinematic_image, "rotation", 0.0, seconds).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tween.parallel().tween_property(cinematic_image, "position", Vector2.ZERO, seconds).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tween.parallel().tween_property(cinematic_image, "scale", Vector2.ONE, seconds).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tween.parallel().tween_property(cinematic_text, "modulate:a", 1.0, seconds)
+	if cinematic_text_bg != null:
+		tween.parallel().tween_property(cinematic_text_bg, "modulate:a", 1.0, seconds)
+	await tween.finished
+
+
+func _cinematic_start_motion(hold_seconds: float, dir: Vector2) -> Tween:
+	if cinematic_image == null:
+		return null
+	var d := dir
+	if d == Vector2.ZERO:
+		d = Vector2.RIGHT
+	var off := _cinematic_offset_for_dir(d, 18.0)
+	var rot := deg_to_rad(_cinematic_rot_deg_for_dir(d) * 0.35)
+	var t := create_tween()
+	t.tween_property(cinematic_image, "position", off, hold_seconds).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	t.parallel().tween_property(cinematic_image, "scale", Vector2.ONE * 1.06, hold_seconds).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	t.parallel().tween_property(cinematic_image, "rotation", rot, hold_seconds).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	return t
 
 
 func _cinematic_hold_seconds(texto: String) -> float:

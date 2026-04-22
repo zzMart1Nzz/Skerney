@@ -21,3 +21,11 @@ _MACOSX/
 *.woff
 *.otf
 
+/builds/
+/export/
+/exports/
+/dist/
+/out/
+/bin/
+/*.zip
+

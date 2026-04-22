@@ -139,7 +139,7 @@ func interact():
 	if required_key == "" or (skerney and skerney.keys.get(required_key, false)):
 		open_door()
 	else:
-		print("Necesitas la llave:", required_key)
+		HUD.mostrar_mensaje("Necesitas una llave")
 
 
 func open_door():
@@ -288,7 +288,11 @@ func _play_ending_cutscene(skerney: Node) -> void:
 	skerney.velocity = Vector2.ZERO
 
 	await FadeLayer.fade_out_blocking()
+	if HUD != null and HUD.has_method("reproducir_cinematica_salida"):
+		await HUD.reproducir_cinematica_salida()
 	await HUD.mostrar_texto_final("Una aventura te espera...", 1.6, 0.5, 0.7)
+	if HUD != null and HUD.has_method("reproducir_cinematica_trailer"):
+		await HUD.reproducir_cinematica_trailer()
 	await HUD.mostrar_texto_final("Gracias por jugar", 1.4, 0.4, 0.6)
 	get_tree().change_scene_to_file("res://escenas/menu_principal/menu_principal.tscn")
 	FadeLayer.fade_in()

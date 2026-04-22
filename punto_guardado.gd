@@ -9,7 +9,8 @@ func interact():
 func guardar_partida():
 	var slot: int = ControladorPartida.current_slot
 	if slot == 0:
-		print("ERROR: No hay slot activo")
+		push_error("No hay slot activo")
+		HUD.mostrar_mensaje("No hay slot activo")
 		return
 
 	var thumbnail := ControladorPartida.capture_thumbnail()

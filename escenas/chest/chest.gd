@@ -92,7 +92,6 @@ func interact():
 		# Dar llave
 		skerney.keys[key_id] = true  
 		ControladorPartida.temp_data["keys"] = skerney.keys
-		print("Llave obtenida:", key_id)
 		var shown_name := key_display_name if key_display_name != "" else key_id
 		HUD.mostrar_mensaje("Has conseguido la llave: " + shown_name)
 
@@ -104,4 +103,4 @@ func interact():
 				get_tree().reload_current_scene()
 			)
 	else:
-		print("ERROR: No se encontró a Skerney")
+		push_error("No se encontró a Skerney")
